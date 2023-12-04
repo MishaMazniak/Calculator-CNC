@@ -1,0 +1,51 @@
+.milling {
+  color: white;
+  background: rgb(60, 100, 56);
+  padding-bottom: 25px;
+  img {
+    width: 200px;
+    height: 150px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .my-nav {
+    padding: 10px;
+    h1 {
+      border: 2px solid silver;
+    }
+    img {
+      width: 40px;
+      height: 40px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .type-cutters {
+    img {
+      border: 2px solid rgb(224, 5, 5);
+    }
+    h6 {
+      margin: 15px 0;
+    }
+  }
+  form {
+    img {
+      width: 200px;
+      height: 250px;
+    }
+  }
+  .type-material {
+    img {
+      width: 70px;
+      height: 70px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    h6 {
+      margin: 10px 0;
+    }
+  }
+}

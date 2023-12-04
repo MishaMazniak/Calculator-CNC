@@ -1,0 +1,46 @@
+.home-page {
+  background: rgb(60, 100, 56);
+  padding-bottom: 20px;
+  color: white;
+  .lang {
+    text-align: right;
+    padding: 10px;
+    span {
+      margin: 0 5px;
+      padding: 0 5px;
+      border: 2px solid silver;
+      border-radius: 3px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .operation {
+    & > div {
+      margin-top: 25px;
+    }
+    h2 {
+      margin-bottom: 25px;
+    }
+    img {
+      width: 100px;
+      height: 100px;
+    }
+    .drilling,
+    .milling,
+    .boring {
+      border: 2px solid rgb(224, 5, 5);
+      padding: 25px;
+    }
+  }
+  img {
+    width: 80px;
+    height: 80px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  h6 {
+    margin-top: 10px;
+  }
+}
