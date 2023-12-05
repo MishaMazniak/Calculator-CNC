@@ -3,8 +3,8 @@ import {useSelector} from "react-redux"
 
 import HomePage from "./components/HomePage"
 import Drilling from "./components/Drilling/Drilling"
-import AppMilling from "./components/Milling/AppMilling"
-import DataOnAllPage from "./components/DataOnAllPage"
+import FooterPage from "./components/FooterPage"
+import Milling from "./components/Milling/Milling"
 
 interface RootState {
   calculatorData: {
@@ -22,10 +22,13 @@ function App() {
       ) : propsRedux.choosOperation === "drilling" ? (
         <>
           <Drilling></Drilling>
-          <DataOnAllPage></DataOnAllPage>
+          <FooterPage></FooterPage>
         </>
       ) : propsRedux.choosOperation === "milling" ? (
-        <AppMilling></AppMilling>
+        <>
+          <Milling></Milling>
+          <FooterPage></FooterPage>
+        </>
       ) : (
         NaN
       )}

@@ -33,14 +33,16 @@
       padding: 25px;
     }
   }
+}
+.footer-page {
+  background: rgb(60, 100, 56);
+  color: white;
   img {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
+    margin: 20px 20px 20px 10px;
     &:hover {
       cursor: pointer;
     }
-  }
-  h6 {
-    margin-top: 10px;
   }
 }

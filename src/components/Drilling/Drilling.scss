@@ -3,12 +3,10 @@
   background: rgb(60, 100, 56);
   padding-bottom: 25px;
   .my-nav {
-    padding: 10px;
     h1 {
       border: 2px solid silver;
     }
     .arrow {
-      margin-right: 10px;
       img {
         width: 40px;
         height: 40px;
@@ -18,50 +16,12 @@
       }
     }
   }
-  img {
-    width: 70px;
-    height: 70px;
-    &:hover {
-      cursor: pointer;
+  .my-radio {
+    label {
+      margin-right: 20px;
     }
-  }
-  h6 {
-    margin-top: 10px;
-  }
-  .type-tools {
-    margin: 5px;
-    padding: 30px;
-  }
-  .drill-sellect {
-    transform: scale(1.2);
-    color: green;
-  }
-  .type-material {
-    margin: 5px;
-    & > div {
-      margin: 10px 0;
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    .material-sellect {
-      transform: scale(1.2);
-      color: green;
-    }
-  }
-  .info-choosed {
-    margin: 20px 0;
-    padding: 10px 0;
-    .border {
-      border-top: 2px solid silver;
-    }
-  }
-  .resoult {
-    & > div {
-      border: 2px solid silver;
-    }
-    p {
-      font-size: 1.5em;
+    input {
+      margin-right: 5px;
     }
   }
 }

@@ -1,10 +1,9 @@
 import "./Milling.scss"
-import ImgArrow from "../../../assets/left-arrow.png"
-import ImgHome from "../../../assets/home.png"
-import imgApDrilling from "../../../assets/Ap-Ae-Drilling.png"
-import imgApMilling from "../../../assets/Ap-Ae-Milling.png"
+import ImgArrow from "../../assets/left-arrow.png"
+import imgApDrilling from "../../assets/Ap-Ae-Drilling.png"
+import imgApMilling from "../../assets/Ap-Ae-Milling.png"
 import {useDispatch} from "react-redux"
-import {switchPage, switchMilling} from "../../../redux/calculatorData"
+import {switchPage} from "../../redux/calculatorData"
 import {useState, useEffect} from "react"
 
 function HssRoughing() {
@@ -24,33 +23,50 @@ function HssRoughing() {
         choosOperation: ""
       })
     )
-    dispatch(
-      switchMilling({
-        choosMillingPage: ""
-      })
-    )
-  }
-  // come on the AllMilling page
-  function allMillingPage() {
-    dispatch(
-      switchMilling({
-        choosMillingPage: ""
-      })
-    )
   }
 
   return (
     <div className="milling">
       <header className="row ms-md-5 my-nav">
-        <div className="col-2 col-md-2 me-1 arrow" onClick={allMillingPage}>
+        <div className="col-2 col-md-2 me-1 arrow" onClick={mainPage}>
           <img src={ImgArrow}></img>
         </div>
-        <h1 className="col-8 col-md-5 offset-md-1">Frezowanie frez palcowy</h1>
-        <div className="col-2 col-md-2 ms-md-5 home" onClick={mainPage}>
-          <img src={ImgHome}></img>
-        </div>
+        <h1 className="col-8 col-md-5 offset-md-1">Frezowanie</h1>
       </header>
-      <form className="row">
+      <div className="form-check my-radio">
+        <input
+          className="me-2"
+          type="radio"
+          name="flexRadioDefault"
+          id="radio-hss"
+          defaultChecked
+          onChange={(e) => {
+            setChackType((e.currentTarget as HTMLButtonElement).id)
+          }}
+        ></input>
+        <label htmlFor="radio-hss">HSS</label>
+        <input
+          className="me-2"
+          type="radio"
+          name="flexRadioDefault"
+          id="radio-carbide"
+          onChange={(e) => {
+            setChackType((e.currentTarget as HTMLButtonElement).id)
+          }}
+        ></input>
+        <label htmlFor="radio-carbide">Węglikowy</label>
+        <input
+          className="me-2"
+          type="radio"
+          name="flexRadioDefault"
+          id="mill-folding"
+          onChange={(e) => {
+            setChackType((e.currentTarget as HTMLButtonElement).id)
+          }}
+        ></input>
+        <label htmlFor="mill-folding">Głowica</label>
+      </div>
+      <form className="row mt-md-4">
         <div className="col-8 offset-2 col-md-3 mt-4">
           <div className="input-group mb-3">
             <span className="input-group-text">d = </span>
@@ -88,37 +104,7 @@ function HssRoughing() {
             ></input>
             <span className="input-group-text"> mm</span>
           </div>
-          <div className="row mb-4">
-            <div className="col-6 form-check">
-              <input
-                className="me-2"
-                type="radio"
-                name="flexRadioDefault"
-                id="radio-hss"
-                defaultChecked
-                onChange={(e) => {
-                  setChackType((e.currentTarget as HTMLButtonElement).id)
-                }}
-              ></input>
-              <label className="" htmlFor="radio-hss">
-                HSS
-              </label>
-            </div>
-            <div className="col-6 form-check">
-              <input
-                className="me-2"
-                type="radio"
-                name="flexRadioDefault"
-                id="radio-carbide"
-                onChange={(e) => {
-                  setChackType((e.currentTarget as HTMLButtonElement).id)
-                }}
-              ></input>
-              <label className="" htmlFor="radio-carbide">
-                Carbide
-              </label>
-            </div>
-          </div>
+          <div className="row mb-4"></div>
         </div>
         <div className="col-8 offset-2 col-md-4 d-md-flex">
           <img className="me-md-4 mb-4" src={imgApDrilling}></img>
