@@ -6,7 +6,7 @@ import millingHead from "../assets/glowica.jpg"
 import boringBarRough from "../assets/wytaczadlo_zgrubne.png"
 import finishingBoringBar from "../assets/wytaczadlo-wyk.png"
 import {useDispatch} from "react-redux"
-import {switchPage} from "../redux/calculatorData"
+import {switchPage, calculationPage} from "../redux/calculatorData"
 
 function HomePage() {
   const dispatch = useDispatch()
@@ -14,10 +14,24 @@ function HomePage() {
   function mainPage(id: string) {
     dispatch(
       switchPage({
-        showPage: false,
         choosOperation: id
       })
     )
+    if (id === "drilling") {
+      dispatch(
+        calculationPage({
+          pageDrilling: true,
+          pageMilling: false
+        })
+      )
+    } else if (id === "milling") {
+      dispatch(
+        calculationPage({
+          pageDrilling: false,
+          pageMilling: true
+        })
+      )
+    }
   }
 
   return (
