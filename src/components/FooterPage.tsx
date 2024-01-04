@@ -17,8 +17,7 @@ interface RootState {
     outputData: {
       vcMin: number
       vcMax: number
-      fkMin: number
-      fkMax: number
+      fk: number
       sMax: number
       sMin: number
       fMin: number
@@ -31,20 +30,42 @@ interface RootState {
 
 function FooterPage() {
   const dispatch = useDispatch()
+  let myTool: string
 
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
 
   const [typeMaterial, setTypeMaterial] = useState("steel")
-  const [typeSelectTool, setTypeSelectTool] = useState("tool-hss")
+  const [typeSelectTool, setTypeSelectTool] = useState("toolhss")
 
   useEffect(() => {
-    dispatch(
-      addMatAndTool({
-        typeMaterial: typeMaterial,
-        typeTool: typeSelectTool
-      })
-    )
-  }, [typeMaterial, typeSelectTool, infoOfTool.outputData])
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/vc-drilling/${typeMaterial}/${typeSelectTool}`
+        )
+        const data = await response.json()
+        typeSelectTool === "toolhss"
+          ? (myTool = data[0].toolhss)
+          : typeSelectTool === "toolcarbide"
+          ? (myTool = data[0].toolcarbide)
+          : typeSelectTool === "toolfolding"
+          ? (myTool = data[0].toolfolding)
+          : NaN
+        dispatch(
+          addMatAndTool({
+            typeMaterial: typeMaterial,
+            typeTool: typeSelectTool,
+            vc: myTool
+          })
+        )
+      } catch (error) {
+        console.error("Error", error)
+      }
+    }
+
+    fetchData()
+    console.log(infoOfTool)
+  }, [typeMaterial, typeSelectTool, dispatch, infoOfTool])
 
   return (
     <div className="footer-page">
@@ -60,31 +81,31 @@ function FooterPage() {
         <input
           type="radio"
           name="typeTools"
-          id="tool-hss"
+          id="toolhss"
           defaultChecked
           onChange={(e) => {
             setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
           }}
         ></input>
-        <label htmlFor="tool-hss">HSS</label>
+        <label htmlFor="toolhss">HSS</label>
         <input
           type="radio"
           name="typeTools"
-          id="tool-carbide"
+          id="toolcarbide"
           onChange={(e) => {
             setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
           }}
         ></input>
-        <label htmlFor="tool-carbide">Węglikowy</label>
+        <label htmlFor="toolcarbide">Węglikowy</label>
         <input
           type="radio"
           name="typeTools"
-          id="tool-folding"
+          id="toolfolding"
           onChange={(e) => {
             setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
           }}
         ></input>
-        <label htmlFor="tool-folding">Płytkowe</label>
+        <label htmlFor="toolfolding">Płytkowe</label>
       </div>
       <h4>Typ materialu</h4>
       <div className="row my-radio">
@@ -151,8 +172,7 @@ function FooterPage() {
           <span>{infoOfTool.outputData.vcMax}</span> m/min
         </div>
         <div>
-          f = <span>{infoOfTool.outputData.fkMin}</span>-
-          <span>{infoOfTool.outputData.fkMax}</span> mm/ob
+          f = <span>{infoOfTool.outputData.fk}</span> mm/ob
         </div>
         <div className="col-10 offset-1 mt-2 border"></div>
       </div>

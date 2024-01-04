@@ -8,6 +8,7 @@ interface RootState {
       typeMaterial: string
       typeTool: string
       d: number
+      vc: number
     }
     pageDrilling: boolean
   }
@@ -19,90 +20,69 @@ function LogicCalcDrill() {
   let infoOfToolAndPage = useSelector(
     (state: RootState) => state.calculatorData
   )
-
-  let diameter: number = infoOfToolAndPage.inputData.d
+  // data from redux
+  let typeMaterial: string = infoOfToolAndPage.inputData.typeMaterial
+  let typeTool: string = infoOfToolAndPage.inputData.typeTool
+  let d: number = infoOfToolAndPage.inputData.d
+  let vc: number = infoOfToolAndPage.inputData.vc
 
   // show in "info catalog"
-  // data 'Vc' tools for "info catalog" from FooterPage
-  let toolInMaterialVcMin: number
-  let toolInMaterialVcMax: number
-  // data 'f' for "info catalog" from FooterPage
-  let drillFMin: number
-  let drillFMax: number
-  // data 'S' for "info catalog" from FooterPage
+  // 'Vc' tools for "info catalog" from catalog
+  let toolInMaterialVcMin: number = vc
+  let toolInMaterialVcMax: number = vc * 1.5
+  // 'f' for "info catalog" from catalog
+  let drillF: number
+
+  // Resoult
+  // 'S' resoult from FooterPage
   let rotateMin: number
   let rotateMax: number
-  // data 'F' for "info catalog" from FooterPage
+  // 'F' resoult from FooterPage
   let servingMin: number
   let servingMax: number
 
-  // math variable
-  // data 'Vc' tools from catalog
-  let toolsVcMin: number
-  let toolsVcMax: number
-
   useEffect(() => {
-    if (infoOfToolAndPage.pageDrilling && infoOfToolAndPage.inputData.d !== 0) {
-      switch (infoOfToolAndPage.inputData.typeTool) {
-        case "tool-hss":
-          toolsVcMin = 20
-          toolsVcMax = 30
-          break
-        case "tool-carbide":
-          toolsVcMin = 50
-          toolsVcMax = 70
-          break
-        case "tool-folding":
-          toolsVcMin = 130
-          toolsVcMax = 180
-          break
-        default:
-          console.log("Not tool")
+    if (infoOfToolAndPage.pageDrilling && d !== 0) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/f-drill-${typeTool}/${d}/${typeMaterial}`
+          )
+          const data = await response.json()
+          typeMaterial === "steel"
+            ? (drillF = data[0].steel)
+            : typeMaterial === "aluminum"
+            ? (drillF = data[0].aluminum)
+            : typeMaterial === "stainles"
+            ? (drillF = data[0].stainles)
+            : typeMaterial === "iron"
+            ? (drillF = data[0].iron)
+            : NaN
+        } catch (error) {
+          console.error("Error", error)
+        }
+        // Resoult
+        // 'S' for "info catalog"
+        rotateMin = Math.floor((toolInMaterialVcMin * 1000) / (d * 3.14))
+        rotateMax = Math.floor((toolInMaterialVcMax * 1000) / (d * 3.14))
+        // 'F' for "info catalog"
+        servingMin = Math.floor(rotateMin * drillF)
+        servingMax = Math.floor(rotateMax * drillF)
+        dispatch(
+          addOutputData({
+            vcMin: toolInMaterialVcMin,
+            vcMax: toolInMaterialVcMax,
+            fk: drillF,
+            sMin: rotateMin,
+            sMax: rotateMax,
+            fMin: servingMin,
+            fMax: servingMax
+          })
+        )
       }
-      // seleckt data Vc drills in different material from catalog
-      switch (infoOfToolAndPage.inputData.typeMaterial) {
-        case "steel":
-          toolInMaterialVcMin = toolsVcMin * 1
-          toolInMaterialVcMax = toolsVcMax * 1
-          break
-        case "aluminum":
-          toolInMaterialVcMin = toolsVcMin * 2
-          toolInMaterialVcMax = toolsVcMax * 2
-          break
-        case "stainles":
-          toolInMaterialVcMin = toolsVcMin * 0.5
-          toolInMaterialVcMax = toolsVcMax * 0.5
-          break
-        case "iron":
-          toolInMaterialVcMin = toolsVcMin * 1.2
-          toolInMaterialVcMax = toolsVcMax * 1.2
-          break
-        default:
-          console.log("Not material")
-      }
-      // 'fk' for "info catalog"
-      drillFMin = Number((diameter * 0.012).toFixed(3))
-      drillFMax = diameter * 0.02
-      // 'S' for "info catalog"
-      rotateMin = Math.floor((toolInMaterialVcMin * 1000) / (diameter * 3.14))
-      rotateMax = Math.floor((toolInMaterialVcMax * 1000) / (diameter * 3.14))
-      // 'F' for "info catalog"
-      servingMin = Math.floor(rotateMin * drillFMin)
-      servingMax = Math.floor(rotateMax * drillFMax)
-      dispatch(
-        addOutputData({
-          vcMin: toolInMaterialVcMin,
-          vcMax: toolInMaterialVcMax,
-          fkMin: drillFMin,
-          fkMax: drillFMax,
-          sMin: rotateMin,
-          sMax: rotateMax,
-          fMin: servingMin,
-          fMax: servingMax
-        })
-      )
+      fetchData()
     }
-  }, [infoOfToolAndPage])
+  }, [infoOfToolAndPage, dispatch])
 
   return <div></div>
 }

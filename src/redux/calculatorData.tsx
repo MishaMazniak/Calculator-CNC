@@ -4,21 +4,21 @@ export const dataSlice = createSlice({
   name: "calculatorData",
   initialState: {
     inputData: {
-      typeMaterial: "",
-      typeTool: "",
+      typeMaterial: "steel",
+      typeTool: "toolhss",
       typeMachining: "",
       d: 0,
       z: 0,
       ap: 0,
       ae: 0,
-      q: 0
+      q: 0,
+      vc: 0
     },
     choosOperation: "",
     outputData: {
       vcMin: 0,
       vcMax: 0,
-      fkMin: 0,
-      fkMax: 0,
+      fk: 0,
       sMin: 0,
       sMax: 0,
       fMin: 0,
@@ -41,6 +41,7 @@ export const dataSlice = createSlice({
     addMatAndTool: (state, action) => {
       state.inputData.typeMaterial = action.payload.typeMaterial
       state.inputData.typeTool = action.payload.typeTool
+      state.inputData.vc = action.payload.vc
     },
     addInputData: (state, action) => {
       state.inputData.typeMachining = action.payload.typeMachining
@@ -54,8 +55,7 @@ export const dataSlice = createSlice({
       state.outputData.vcMin = action.payload.vcMin
       state.outputData.vcMax = action.payload.vcMax
 
-      state.outputData.fkMin = action.payload.fkMin
-      state.outputData.fkMax = action.payload.fkMax
+      state.outputData.fk = action.payload.fk
 
       state.outputData.sMin = action.payload.sMin
       state.outputData.sMax = action.payload.sMax
