@@ -26,17 +26,17 @@ function HssRoughing() {
   const dispatch = useDispatch()
 
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
+  let typeTool = infoOfTool.inputData.typeTool
 
   // Data parameters
   const [d, setD] = useState(0)
   const [z, setZ] = useState(0)
   const [ap, setAp] = useState(0)
   const [ae, setAe] = useState(0)
-  // Ap and Ae placeholder
-  const [apPlace, setApPlace] = useState("")
-  const [aePlace, setAePlace] = useState("")
 
   let q: number
+  // koef
+  let koef: number
 
   // Data machining type
   const [typeMachining, setTypeMachining] = useState("rough")
@@ -55,60 +55,56 @@ function HssRoughing() {
       })
     )
   }
-  // clean data Ap and Ae after change D
-  function changeD(val: number) {
-    setD(val)
-    setAp(0)
-    setAe(0)
-  }
-  // calculate Ap and Ae after input own data Ap or Ae
-  function changeA(val: number, typeA: string) {
-    if (d !== 0) {
-      if (typeMachining === "rough") {
-        q = d * d * 0.25 // processing area
-        if (typeA === "type-ap") {
-          setAp(val)
-          setAe(Number((q / val).toFixed(2)))
-        } else if (typeA === "type-ae") {
-          setAe(val)
-          setAp(q / val)
-        }
-      } else if (typeMachining === "finishing") {
-        q = d * d * 0.1 // processing area
-        if (typeA === "type-ap") {
-          setAp(val)
-          setAe(Number((q / val).toFixed(2)))
-        } else if (typeA === "type-ae") {
-          setAe(val)
-          setAp(q / val)
-        }
-      }
-    }
+  // show z, ap, ae after input d
+  function changeD(d: number) {
+    setD(d)
+    setAp(d)
+    setAe(d * 0.1)
+    // show Z
+    if (typeTool === "toolhss") {
+      if (d <= 20) setZ(4)
+      else if (d > 20 && d <= 40) setZ(6)
+      else if (d > 40) setZ(8)
+    } else setZ(0)
   }
 
   useEffect(() => {
     if (d !== 0) {
-      if (typeMachining === "rough") {
-        q = d * d * 0.25 // processing area
-        setApPlace((1 * d).toString())
-        setAePlace((0.25 * d).toString())
-      } else if (typeMachining === "finishing") {
-        q = d * d * 0.1 // processing area
-        setApPlace((1 * d).toString())
-        setAePlace((0.1 * d).toString())
+      q = d * d * 0.1
+      if (typeMachining === "rough" && typeTool === "toolhss") {
+        if (ap === d) {
+          ae <= 0.25 * d
+            ? (koef = 1)
+            : ae > 0.25 * d && ae <= 0.5 * d
+            ? (koef = 0.75)
+            : ae === d
+            ? (koef = 0.5)
+            : (koef = 0.5)
+        } else if (ap !== d) {
+          setAe(q / ap)
+          console.log(ae)
+        }
+      } else if (typeMachining === "finishing" && typeTool === "toolhss") {
+        ae <= 0.1 * d
+          ? (koef = 1)
+          : ae > 0.1 * d && ae <= 0.5 * d
+          ? (koef = 0.65)
+          : ae === d
+          ? (koef = 0.4)
+          : (koef = 0.4)
       }
+      console.log(koef)
+      dispatch(
+        addInputData({
+          d: d,
+          z: z,
+          ap: ap,
+          ae: ae,
+          q: q,
+          typeMachining: typeMachining
+        })
+      )
     }
-
-    dispatch(
-      addInputData({
-        d: d,
-        z: z,
-        ap: ap,
-        ae: ae,
-        q: q,
-        typeMachining: typeMachining
-      })
-    )
   }, [d, z, ap, ae, typeMachining])
 
   return (
@@ -160,6 +156,7 @@ function HssRoughing() {
             <input
               type="number"
               className="form-control"
+              value={z === 0 ? "" : z}
               onChange={(e) => setZ(parseFloat(e.target.value))}
             ></input>
             <span className="input-group-text"> szt</span>
@@ -169,10 +166,9 @@ function HssRoughing() {
             <input
               type="number"
               className="form-control"
-              placeholder={apPlace}
               value={ap === 0 ? "" : ap}
               id="type-ap"
-              onChange={(e) => changeA(parseFloat(e.target.value), e.target.id)}
+              onChange={(e) => setAp(parseFloat(e.target.value))}
             ></input>
             <span className="input-group-text"> mm</span>
           </div>
@@ -181,30 +177,30 @@ function HssRoughing() {
             <input
               type="number"
               className="form-control"
-              placeholder={aePlace}
               value={ae === 0 ? "" : ae}
               id="type-ae"
-              onChange={(e) => changeA(parseFloat(e.target.value), e.target.id)}
+              onChange={(e) => setAe(parseFloat(e.target.value))}
             ></input>
             <span className="input-group-text"> mm</span>
           </div>
           <div className="row mb-4"></div>
         </div>
         <div className="col-8 offset-2 col-md-4">
+          {/* Select img for tools*/}
           {typeMachining === "rough" &&
-          infoOfTool.inputData.typeTool === "tool-hss" ? (
+          infoOfTool.inputData.typeTool === "toolhss" ? (
             <div className=" d-md-flex">
               <img className="me-md-4 mb-4" src={imgApDrillRough}></img>
               <img className="mb-4" src={imgApMillRough}></img>
             </div>
           ) : (typeMachining === "rough" || typeMachining === "finishing") &&
-            infoOfTool.inputData.typeTool !== "tool-folding" ? (
+            infoOfTool.inputData.typeTool !== "toolfolding" ? (
             <div className=" d-md-flex">
               <img className="me-md-4 mb-4" src={imgApDrilling}></img>
               <img className="mb-4" src={imgApMilling}></img>
             </div>
           ) : (typeMachining === "rough" || typeMachining === "finishing") &&
-            infoOfTool.inputData.typeTool === "tool-folding" ? (
+            infoOfTool.inputData.typeTool === "toolfolding" ? (
             <div className=" d-md-flex">
               <img className="me-md-4 mb-4" src={imgApDrillFold}></img>
               <img className="mb-4" src={imgApDrillFold2}></img>

@@ -6,13 +6,14 @@ export const dataSlice = createSlice({
     inputData: {
       typeMaterial: "steel",
       typeTool: "toolhss",
-      typeMachining: "",
+      typeMachining: "rough",
       d: 0,
       z: 0,
       ap: 0,
       ae: 0,
       q: 0,
-      vc: 0
+      vcMin: 0,
+      vcMax: 0
     },
     choosOperation: "",
     outputData: {
@@ -41,7 +42,8 @@ export const dataSlice = createSlice({
     addMatAndTool: (state, action) => {
       state.inputData.typeMaterial = action.payload.typeMaterial
       state.inputData.typeTool = action.payload.typeTool
-      state.inputData.vc = action.payload.vc
+      state.inputData.vcMin = action.payload.vcMin
+      state.inputData.vcMax = action.payload.vcMax
     },
     addInputData: (state, action) => {
       state.inputData.typeMachining = action.payload.typeMachining

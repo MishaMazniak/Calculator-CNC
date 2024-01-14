@@ -7,11 +7,14 @@ interface RootState {
     inputData: {
       typeMaterial: string
       typeTool: string
+      typeMachining: string
       d: number
       z: number
       ap: number
       ae: number
       q: number
+      vcMin: number
+      vcMax: number
     }
     pageMilling: boolean
   }
@@ -23,100 +26,71 @@ function LogicCalcMill() {
   let infoRedux = useSelector((state: RootState) => state.calculatorData)
   let reduxInput = infoRedux.inputData
 
-  let diameter: number = reduxInput.d
+  // data from redux
+  let d: number = reduxInput.d
   let q: number = reduxInput.q
+  let vcMin: number = reduxInput.vcMin
+  let vcMax: number = reduxInput.vcMax
+  let typeMaterial: string = reduxInput.typeMaterial
+  let typeTool: string = reduxInput.typeTool
 
   // show in "info catalog"
-  // data 'Vc' tools for "info catalog" from FooterPage
-  let toolInMaterialVcMin: number
-  let toolInMaterialVcMax: number
-  // data 'f' for "info catalog" from FooterPage
-  let drillFMin: number
-  let drillFMax: number
-  // data 'S' for "info catalog" from FooterPage
+  // 'Vc' tools for "info catalog" from catalog
+  let toolInMaterialVcMin: number = vcMin
+  let toolInMaterialVcMax: number = vcMax
+  // 'f' for "info catalog" from catalog
+  let millF: number
+
+  // Resoult
+  // 'S' resoult from FooterPage
   let rotateMin: number
   let rotateMax: number
-  // data 'F' for "info catalog" from FooterPage
+  // 'F' resoult from FooterPage
   let servingMin: number
   let servingMax: number
 
-  // math variable
-  // data 'Vc' tools from catalog
-  let toolsVcMin: number
-  let toolsVcMax: number
-
-  // data 'Fz' tools from catalog
-  let fz_kat: number = 0.05
-  let fz_in: number
   useEffect(() => {
     console.log(infoRedux)
     if (infoRedux.pageMilling && reduxInput.d !== 0) {
-      // seleckt data Vc milling in different type tools from catalog
-      switch (reduxInput.typeTool) {
-        case "tool-hss":
-          toolsVcMin = 20
-          toolsVcMax = 35
-          break
-        case "tool-carbide":
-          toolsVcMin = 50
-          toolsVcMax = 70
-          break
-        case "tool-folding":
-          toolsVcMin = 130
-          toolsVcMax = 180
-          break
-        default:
-          console.log("Not tool")
-      }
-      // seleckt data Vc milling in different material from catalog
-      switch (reduxInput.typeMaterial) {
-        case "steel":
-          toolInMaterialVcMin = toolsVcMin * 1
-          toolInMaterialVcMax = toolsVcMax * 1
-          break
-        case "aluminum":
-          toolInMaterialVcMin = toolsVcMin * 3
-          toolInMaterialVcMax = toolsVcMax * 5
-          break
-        case "stainles":
-          toolInMaterialVcMin = toolsVcMin * 0.75
-          toolInMaterialVcMax = toolsVcMax * 0.95
-          break
-        case "iron":
-          toolInMaterialVcMin = toolsVcMin * 0.5
-          toolInMaterialVcMax = toolsVcMax * 1.4
-          break
-        default:
-          console.log("Not material")
-      }
-      if (reduxInput.ap !== 0 && reduxInput.ae !== 0) {
-        // check ap and ae
-        if (reduxInput.ae <= 0.25 * diameter) {
-          fz_in = 1 * fz_kat
-        } else if (
-          reduxInput.ae > 0.25 * diameter &&
-          reduxInput.ae <= 0.5 * diameter
-        ) {
-          fz_in = 0.8 * fz_kat
-        } else if (reduxInput.ae == diameter) {
-          fz_in = 0.4 * fz_kat
+      const fetchMillData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/f-mill-toolhss-rough/${d}/${typeMaterial}`
+          )
+          const data = await response.json()
+          typeMaterial === "steel"
+            ? (millF = data[0].steel)
+            : typeMaterial === "aluminum"
+            ? (millF = data[0].aluminum)
+            : typeMaterial === "stainles"
+            ? (millF = data[0].stainles)
+            : typeMaterial === "iron"
+            ? (millF = data[0].iron)
+            : NaN
+        } catch (error) {
+          console.error("Error", error)
         }
+        // Resoult
+        // 'S' for "info catalog"
+        rotateMin = Math.floor((toolInMaterialVcMin * 1000) / (d * 3.14))
+        rotateMax = Math.floor((toolInMaterialVcMax * 1000) / (d * 3.14))
+        // 'F' for "info catalog"
+        servingMin = millF
+        servingMax = millF
+
+        dispatch(
+          addOutputData({
+            vcMin: toolInMaterialVcMin,
+            vcMax: toolInMaterialVcMax,
+            fk: 0,
+            sMin: rotateMin,
+            sMax: rotateMax,
+            fMin: servingMin,
+            fMax: servingMax
+          })
+        )
       }
-      // 'S' for "info catalog"
-      rotateMin = Math.floor((toolInMaterialVcMin * 1000) / (diameter * 3.14))
-      rotateMax = Math.floor((toolInMaterialVcMax * 1000) / (diameter * 3.14))
-      dispatch(
-        addOutputData({
-          vcMin: toolInMaterialVcMin,
-          vcMax: toolInMaterialVcMax,
-          fkMin: drillFMin,
-          fkMax: drillFMax,
-          sMin: rotateMin,
-          sMax: rotateMax,
-          fMin: servingMin,
-          fMax: servingMax
-        })
-      )
+      fetchMillData()
     }
   }, [infoRedux])
 

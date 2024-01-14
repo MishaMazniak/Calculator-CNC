@@ -23,6 +23,9 @@ interface RootState {
       fMin: number
       fMax: number
     }
+    inputData: {
+      typeMachining: string
+    }
     pageDrilling: boolean
     pageMilling: boolean
   }
@@ -30,7 +33,8 @@ interface RootState {
 
 function FooterPage() {
   const dispatch = useDispatch()
-  let myTool: string
+  let myVcMin: string
+  let myVcMax: string
 
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
 
@@ -38,34 +42,80 @@ function FooterPage() {
   const [typeSelectTool, setTypeSelectTool] = useState("toolhss")
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/vc-drilling/${typeMaterial}/${typeSelectTool}`
-        )
-        const data = await response.json()
-        typeSelectTool === "toolhss"
-          ? (myTool = data[0].toolhss)
-          : typeSelectTool === "toolcarbide"
-          ? (myTool = data[0].toolcarbide)
-          : typeSelectTool === "toolfolding"
-          ? (myTool = data[0].toolfolding)
-          : NaN
-        dispatch(
-          addMatAndTool({
-            typeMaterial: typeMaterial,
-            typeTool: typeSelectTool,
-            vc: myTool
-          })
-        )
-      } catch (error) {
-        console.error("Error", error)
+    if (infoOfTool.pageDrilling) {
+      // data base Vc for drilling
+      const fetchDrillData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/vc-drilling/${typeMaterial}/${typeSelectTool}`
+          )
+          const data = await response.json()
+          saveFetch(data)
+        } catch (error) {
+          console.error("Error", error)
+        }
       }
+      fetchDrillData()
+    } else if (
+      infoOfTool.pageMilling &&
+      typeSelectTool === "toolhss" &&
+      infoOfTool.inputData.typeMachining === "rough"
+    ) {
+      // data base Vc for milling rough tool hss
+      const fetchMillData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/vc-milling-rough/${typeMaterial}/${typeSelectTool}`
+          )
+          const data = await response.json()
+          saveFetch(data)
+        } catch (error) {
+          console.error("Error", error)
+        }
+      }
+      fetchMillData()
+    } else if (
+      infoOfTool.pageMilling &&
+      (typeSelectTool !== "toolhss" ||
+        infoOfTool.inputData.typeMachining === "finishing")
+    ) {
+      // data base Vc for milling
+      const fetchMillData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/vc-milling/${typeMaterial}/${typeSelectTool}`
+          )
+          const data = await response.json()
+          saveFetch(data)
+        } catch (error) {
+          console.error("Error", error)
+        }
+      }
+      fetchMillData()
     }
-
-    fetchData()
-    console.log(infoOfTool)
   }, [typeMaterial, typeSelectTool, dispatch, infoOfTool])
+
+  // get value from data base
+  function saveFetch(data: any) {
+    if (typeSelectTool === "toolhss") {
+      myVcMin = data[0].toolhss
+      myVcMax = data[0].toolhssMax
+    } else if (typeSelectTool === "toolcarbide") {
+      myVcMin = data[0].toolcarbide
+      myVcMax = data[0].toolcarbideMax
+    } else if (typeSelectTool === "toolfolding") {
+      myVcMin = data[0].toolfolding
+      myVcMax = data[0].toolfoldingMax
+    }
+    dispatch(
+      addMatAndTool({
+        typeMaterial: typeMaterial,
+        typeTool: typeSelectTool,
+        vcMin: myVcMin,
+        vcMax: myVcMax
+      })
+    )
+  }
 
   return (
     <div className="footer-page">

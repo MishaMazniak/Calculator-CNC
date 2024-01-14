@@ -8,7 +8,8 @@ interface RootState {
       typeMaterial: string
       typeTool: string
       d: number
-      vc: number
+      vcMin: number
+      vcMax: number
     }
     pageDrilling: boolean
   }
@@ -24,12 +25,15 @@ function LogicCalcDrill() {
   let typeMaterial: string = infoOfToolAndPage.inputData.typeMaterial
   let typeTool: string = infoOfToolAndPage.inputData.typeTool
   let d: number = infoOfToolAndPage.inputData.d
-  let vc: number = infoOfToolAndPage.inputData.vc
+  let vcMin: number = infoOfToolAndPage.inputData.vcMin
+  let vcMax: number = infoOfToolAndPage.inputData.vcMax
+  // d correct for tabl database
+  let diametr: number
 
   // show in "info catalog"
   // 'Vc' tools for "info catalog" from catalog
-  let toolInMaterialVcMin: number = vc
-  let toolInMaterialVcMax: number = vc * 1.5
+  let toolInMaterialVcMin: number = vcMin
+  let toolInMaterialVcMax: number = vcMax
   // 'f' for "info catalog" from catalog
   let drillF: number
 
@@ -42,11 +46,18 @@ function LogicCalcDrill() {
   let servingMax: number
 
   useEffect(() => {
+    // data cost cap for databace
+    if (typeTool === "toolhss" && d > 55) diametr = 55
+    else if (typeTool === "toolcarbide" && d > 20) diametr = 20
+    else if (typeTool === "toolfolding" && d < 8) diametr = 8
+    else if (typeTool === "toolfolding" && d > 35) diametr = 35
+    else diametr = Math.floor(d)
+    // get data from database
     if (infoOfToolAndPage.pageDrilling && d !== 0) {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/f-drill-${typeTool}/${d}/${typeMaterial}`
+            `http://localhost:5000/f-drill-${typeTool}/${diametr}/${typeMaterial}`
           )
           const data = await response.json()
           typeMaterial === "steel"

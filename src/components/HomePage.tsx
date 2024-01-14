@@ -1,8 +1,6 @@
 import "./HomePage.scss"
-import drillHss from "../assets/wiertla-hss.jpg"
-import drillPlate from "../assets/wiertla-plytka.png"
-import millingCutter from "../assets/frez.png"
-import millingHead from "../assets/glowica.jpg"
+import drillHss2 from "../assets/Drilling.png"
+import millingCutter2 from "../assets/Milling.png"
 import boringBarRough from "../assets/wytaczadlo_zgrubne.png"
 import finishingBoringBar from "../assets/wytaczadlo-wyk.png"
 import {useDispatch} from "react-redux"
@@ -50,8 +48,7 @@ function HomePage() {
             id="drilling"
             onClick={(e) => mainPage((e.currentTarget as HTMLButtonElement).id)}
           >
-            <img src={drillHss}></img>
-            <img src={drillPlate}></img>
+            <img src={drillHss2}></img>
           </button>
         </div>
         <div className="col-12 col-md-4">
@@ -61,8 +58,7 @@ function HomePage() {
             id="milling"
             onClick={(e) => mainPage((e.currentTarget as HTMLButtonElement).id)}
           >
-            <img src={millingCutter}></img>
-            <img src={millingHead}></img>
+            <img src={millingCutter2}></img>
           </button>
         </div>
         <div className="col-12 col-md-4 offset-md-4">
