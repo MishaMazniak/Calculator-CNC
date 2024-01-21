@@ -13,7 +13,9 @@ export const dataSlice = createSlice({
       ae: 0,
       q: 0,
       vcMin: 0,
-      vcMax: 0
+      vcMax: 0,
+      coefAe: 0,
+      coefAp: 0
     },
     choosOperation: "",
     outputData: {
@@ -52,6 +54,8 @@ export const dataSlice = createSlice({
       state.inputData.ap = action.payload.ap
       state.inputData.ae = action.payload.ae
       state.inputData.q = action.payload.q
+      state.inputData.coefAe = action.payload.coefAe
+      state.inputData.coefAp = action.payload.coefAp
     },
     addOutputData: (state, action) => {
       state.outputData.vcMin = action.payload.vcMin

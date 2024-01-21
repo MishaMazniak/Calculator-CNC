@@ -24,7 +24,7 @@ interface RootState {
 
 function HssRoughing() {
   const dispatch = useDispatch()
-
+  // data from redux
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
   let typeTool = infoOfTool.inputData.typeTool
 
@@ -35,8 +35,9 @@ function HssRoughing() {
   const [ae, setAe] = useState(0)
 
   let q: number
-  // koef
-  let koef: number
+  // coef Ae and Ap
+  let coefAe: number = 1
+  let coefAp: number = 1
 
   // Data machining type
   const [typeMachining, setTypeMachining] = useState("rough")
@@ -61,7 +62,7 @@ function HssRoughing() {
     setAp(d)
     setAe(d * 0.1)
     // show Z
-    if (typeTool === "toolhss") {
+    if (typeTool === "toolhss" || typeTool === "toolcarbide") {
       if (d <= 20) setZ(4)
       else if (d > 20 && d <= 40) setZ(6)
       else if (d > 40) setZ(8)
@@ -69,31 +70,43 @@ function HssRoughing() {
   }
 
   useEffect(() => {
+    // choose a coefficient "Ae" for different types of cuttings
     if (d !== 0) {
       q = d * d * 0.1
       if (typeMachining === "rough" && typeTool === "toolhss") {
-        if (ap === d) {
-          ae <= 0.25 * d
-            ? (koef = 1)
-            : ae > 0.25 * d && ae <= 0.5 * d
-            ? (koef = 0.75)
-            : ae === d
-            ? (koef = 0.5)
-            : (koef = 0.5)
-        } else if (ap !== d) {
-          setAe(q / ap)
-          console.log(ae)
-        }
-      } else if (typeMachining === "finishing" && typeTool === "toolhss") {
-        ae <= 0.1 * d
-          ? (koef = 1)
-          : ae > 0.1 * d && ae <= 0.5 * d
-          ? (koef = 0.65)
+        // dependense about "ae"
+        ae <= 0.25 * d
+          ? (coefAe = 1)
+          : ae > 0.25 * d && ae <= 0.5 * d
+          ? (coefAe = 0.75)
           : ae === d
-          ? (koef = 0.4)
-          : (koef = 0.4)
+          ? (coefAe = 0.5)
+          : (coefAe = 0.5)
+        // dependense about "ap"
+        ap > d && ap < 2 * d
+          ? (coefAp = 0.5)
+          : ap > 2 * d
+          ? (coefAp = 0.25)
+          : (coefAp = 1)
+      } else if (
+        (typeMachining === "finishing" && typeTool === "toolhss") ||
+        typeTool === "toolcarbide"
+      ) {
+        // dependense about "ae"
+        ae <= 0.1 * d
+          ? (coefAe = 1)
+          : ae > 0.1 * d && ae <= 0.5 * d
+          ? (coefAe = 0.65)
+          : ae === d
+          ? (coefAe = 0.4)
+          : (coefAe = 0.4)
+        // dependense about "ae"
+        ap > d && ap < 2 * d
+          ? (coefAp = 0.5)
+          : ap > 2 * d
+          ? (coefAp = 0.25)
+          : (coefAp = 1)
       }
-      console.log(koef)
       dispatch(
         addInputData({
           d: d,
@@ -101,7 +114,9 @@ function HssRoughing() {
           ap: ap,
           ae: ae,
           q: q,
-          typeMachining: typeMachining
+          typeMachining: typeMachining,
+          coefAe: coefAe,
+          coefAp: coefAp
         })
       )
     }
@@ -156,7 +171,7 @@ function HssRoughing() {
             <input
               type="number"
               className="form-control"
-              value={z === 0 ? "" : z}
+              value={z}
               onChange={(e) => setZ(parseFloat(e.target.value))}
             ></input>
             <span className="input-group-text"> szt</span>
@@ -166,7 +181,7 @@ function HssRoughing() {
             <input
               type="number"
               className="form-control"
-              value={ap === 0 ? "" : ap}
+              value={ap}
               id="type-ap"
               onChange={(e) => setAp(parseFloat(e.target.value))}
             ></input>
@@ -177,7 +192,7 @@ function HssRoughing() {
             <input
               type="number"
               className="form-control"
-              value={ae === 0 ? "" : ae}
+              value={ae}
               id="type-ae"
               onChange={(e) => setAe(parseFloat(e.target.value))}
             ></input>
