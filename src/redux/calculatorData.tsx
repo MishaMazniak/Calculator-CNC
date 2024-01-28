@@ -7,15 +7,27 @@ export const dataSlice = createSlice({
       typeMaterial: "steel",
       typeTool: "toolhss",
       typeMachining: "rough",
+      plate: "adkt",
       d: 0,
       z: 0,
       ap: 0,
       ae: 0,
-      q: 0,
       vcMin: 0,
       vcMax: 0,
       coefAe: 0,
       coefAp: 0
+    },
+    inputPlate: {
+      ap_Max: 0,
+      ap_Min: 0,
+      f_Max: 0,
+      f_Min: 0,
+      hardness: 0,
+      name: "",
+      type: "",
+      vc_Max: 0,
+      vc_Min: 0,
+      website: ""
     },
     choosOperation: "",
     outputData: {
@@ -53,9 +65,21 @@ export const dataSlice = createSlice({
       state.inputData.z = action.payload.z
       state.inputData.ap = action.payload.ap
       state.inputData.ae = action.payload.ae
-      state.inputData.q = action.payload.q
       state.inputData.coefAe = action.payload.coefAe
       state.inputData.coefAp = action.payload.coefAp
+      state.inputData.plate = action.payload.plate
+    },
+    addInputPlate: (state, action) => {
+      state.inputPlate.ap_Max = action.payload.ap_Max
+      state.inputPlate.ap_Min = action.payload.ap_Min
+      state.inputPlate.f_Max = action.payload.f_Max
+      state.inputPlate.f_Min = action.payload.f_Min
+      state.inputPlate.hardness = action.payload.hardness
+      state.inputPlate.name = action.payload.name
+      state.inputPlate.type = action.payload.type
+      state.inputPlate.vc_Max = action.payload.vc_Max
+      state.inputPlate.vc_Min = action.payload.vc_Min
+      state.inputPlate.website = action.payload.website
     },
     addOutputData: (state, action) => {
       state.outputData.vcMin = action.payload.vcMin
@@ -75,6 +99,7 @@ export const dataSlice = createSlice({
 export const {
   switchPage,
   addInputData,
+  addInputPlate,
   addOutputData,
   calculationPage,
   addD,

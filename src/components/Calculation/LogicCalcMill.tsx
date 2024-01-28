@@ -18,6 +18,13 @@ interface RootState {
       coefAe: number
       coefAp: number
     }
+    inputPlate: {
+      f_Max: number
+      f_Min: number
+      hardness: number
+      vc_Max: number
+      vc_Min: number
+    }
     pageMilling: boolean
   }
 }
@@ -27,11 +34,11 @@ function LogicCalcMill() {
 
   let infoRedux = useSelector((state: RootState) => state.calculatorData)
   let reduxInput = infoRedux.inputData
+  let reduxInputPlate = infoRedux.inputPlate
 
-  // data from redux
+  // data from redux for inputData
   let d: number = reduxInput.d
   let z: number = reduxInput.z
-  let q: number = reduxInput.q
   let vcMin: number = reduxInput.vcMin
   let vcMax: number = reduxInput.vcMax
   let coefAe: number = reduxInput.coefAe
@@ -39,6 +46,12 @@ function LogicCalcMill() {
   let typeMaterial: string = reduxInput.typeMaterial
   let typeTool: string = reduxInput.typeTool
   let typeMachining: string = reduxInput.typeMachining
+  // data from redux for inputPlate
+  let f_Max: number = reduxInputPlate.f_Max
+  let f_Min: number = reduxInputPlate.f_Min
+  let hardness: number = reduxInputPlate.hardness
+  let vc_Max: number = reduxInputPlate.vc_Max
+  let vc_Min: number = reduxInputPlate.vc_Min
 
   // show in "info catalog"
   // 'Vc' tools for "info catalog" from catalog
@@ -63,7 +76,7 @@ function LogicCalcMill() {
 
   useEffect(() => {
     console.log(infoRedux)
-    if (infoRedux.pageMilling && reduxInput.d !== 0) {
+    if (infoRedux.pageMilling && d !== 0) {
       // condition for tool hss and carbide
       if (typeTool === "toolhss" || typeTool === "toolcarbide") {
         // data cost cap for databace
@@ -72,11 +85,11 @@ function LogicCalcMill() {
         else if (typeTool === "toolcarbide" && d > 20) diametr = 20
         else diametr = Math.floor(d)
         // select typeProces for database
-        if (typeTool === "toolhss") {
-          typeProces = typeMachining
-        } else if (typeTool === "toolcarbide") {
-          typeProces = "main"
-        }
+        typeTool === "toolhss"
+          ? (typeProces = typeMachining)
+          : typeTool === "toolcarbide"
+          ? (typeProces = "main")
+          : NaN
         const fetchMillData = async () => {
           try {
             const response = await fetch(
@@ -102,10 +115,8 @@ function LogicCalcMill() {
           rotateMin = Math.floor((toolInMaterialVcMin * 1000) / (d * 3.14))
           rotateMax = Math.floor((toolInMaterialVcMax * 1000) / (d * 3.14))
           // 'F' for "info catalog"
-          servingMin = Math.floor(rotateMin * millF * z * coefAe * coefAp)
-          servingMax = Math.floor(rotateMax * millF * z * coefAe * coefAp)
-          // millF = 180 / rotateMin / 4
-
+          servingMin = Math.floor(rotateMin * millRorate * coefAe * coefAp)
+          servingMax = Math.floor(rotateMax * millRorate * coefAe * coefAp)
           dispatch(
             addOutputData({
               // info for catalog
@@ -121,45 +132,30 @@ function LogicCalcMill() {
           )
         }
         fetchMillData()
-      }
-      // condition for tool folding
-      if (typeTool === "toolfolding") {
-        const fetchMillFolding = async () => {
-          try {
-            const response = await fetch(
-              `http://localhost:5000/f-mill-${typeTool}/${typeMaterial}`
-            )
-            const data = await response.json()
-            millF = data[0].toolfolding
-          } catch (error) {
-            console.error("Error333", error)
-          }
-          // // 'f' for "info catalog"
-          // millRorate = Number((millF * z).toFixed(2))
-          // // Resoult
-          // // 'S' for "info catalog"
-          // rotateMin = Math.floor((toolInMaterialVcMin * 1000) / (d * 3.14))
-          // rotateMax = Math.floor((toolInMaterialVcMax * 1000) / (d * 3.14))
-          // // 'F' for "info catalog"
-          // servingMin = Math.floor(rotateMin * millF * z * coefAe * coefAp)
-          // servingMax = Math.floor(rotateMax * millF * z * coefAe * coefAp)
-          // // millF = 180 / rotateMin / 4
-
-          // dispatch(
-          //   addOutputData({
-          //     // info for catalog
-          //     vcMin: toolInMaterialVcMin,
-          //     vcMax: toolInMaterialVcMax,
-          //     fk: millRorate,
-          //     //resoult
-          //     sMin: rotateMin,
-          //     sMax: rotateMax,
-          //     fMin: servingMin,
-          //     fMax: servingMax
-          //   })
-          // )
-        }
-        fetchMillFolding()
+      } else if (typeTool === "toolfolding") {
+        millF = f_Min
+        // 'f' for "info catalog"
+        millRorate = Number((millF * z).toFixed(2))
+        // Resoult
+        // 'S' for "info catalog"
+        rotateMin = Math.floor((toolInMaterialVcMin * 1000) / (d * 3.14))
+        rotateMax = Math.floor((toolInMaterialVcMax * 1000) / (d * 3.14))
+        // 'F' for "info catalog"
+        servingMin = Math.floor(rotateMin * millRorate)
+        servingMax = Math.floor(rotateMax * millRorate)
+        dispatch(
+          addOutputData({
+            // info for catalog
+            vcMin: toolInMaterialVcMin,
+            vcMax: toolInMaterialVcMax,
+            fk: millRorate,
+            //resoult
+            sMin: rotateMin,
+            sMax: rotateMax,
+            fMin: servingMin,
+            fMax: servingMax
+          })
+        )
       }
     }
   }, [infoRedux])

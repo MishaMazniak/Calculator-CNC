@@ -1,8 +1,7 @@
 import "./HomePage.scss"
-import drillHss2 from "../assets/Drilling.png"
-import millingCutter2 from "../assets/Milling.png"
-import boringBarRough from "../assets/wytaczadlo_zgrubne.png"
-import finishingBoringBar from "../assets/wytaczadlo-wyk.png"
+import drillHss from "../assets/Drilling.png"
+import millingCutter from "../assets/Milling.png"
+import boringBarRough from "../assets/wytaczadlo_zgrubne2.png"
 import {useDispatch} from "react-redux"
 import {switchPage, calculationPage} from "../redux/calculatorData"
 
@@ -48,7 +47,7 @@ function HomePage() {
             id="drilling"
             onClick={(e) => mainPage((e.currentTarget as HTMLButtonElement).id)}
           >
-            <img src={drillHss2}></img>
+            <img src={drillHss}></img>
           </button>
         </div>
         <div className="col-12 col-md-4">
@@ -58,7 +57,7 @@ function HomePage() {
             id="milling"
             onClick={(e) => mainPage((e.currentTarget as HTMLButtonElement).id)}
           >
-            <img src={millingCutter2}></img>
+            <img src={millingCutter}></img>
           </button>
         </div>
         <div className="col-12 col-md-4 offset-md-4">
@@ -69,7 +68,6 @@ function HomePage() {
             onClick={(e) => mainPage((e.currentTarget as HTMLButtonElement).id)}
           >
             <img src={boringBarRough}></img>
-            <img src={finishingBoringBar}></img>
           </button>
         </div>
       </div>
