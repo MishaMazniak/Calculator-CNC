@@ -4,6 +4,8 @@ import matAlum from "../assets/iso-n-al.jpg"
 import matStal from "../assets/iso-p-stal.jpg"
 import matStalN from "../assets/iso-m-nier.jpg"
 import matZel from "../assets/iso-k-zel.jpg"
+import upArrow from "../assets/up-arrow.png"
+import downArrow from "../assets/down-arrow.png"
 
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from "react-redux"
@@ -28,6 +30,13 @@ interface RootState {
       typeMachining: string
       plate: string
     }
+    inputPlate: {
+      ap_Min: number
+      ap_Max: number
+      f_Min: number
+      f_Max: number
+      hardness: number
+    }
     pageDrilling: boolean
     pageMilling: boolean
   }
@@ -41,6 +50,12 @@ function FooterPage() {
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
 
   let typePlate: string = infoOfTool.inputData.plate
+
+  let ap_Min = infoOfTool.inputPlate.ap_Min
+  let ap_Max = infoOfTool.inputPlate.ap_Max
+  let f_Min = infoOfTool.inputPlate.f_Min
+  let f_Max = infoOfTool.inputPlate.f_Max
+  let hardness = infoOfTool.inputPlate.hardness
 
   const [typeMaterial, setTypeMaterial] = useState("steel")
   const [typeSelectTool, setTypeSelectTool] = useState("toolhss")
@@ -129,6 +144,7 @@ function FooterPage() {
               })
             )
           } catch (error) {
+            alert("Tej płyty nie używa się do materiału - " + typeMaterial)
             console.error("Error", error)
           }
         }
@@ -168,6 +184,61 @@ function FooterPage() {
       ) : (
         NaN
       )}
+      <div className="accordion mx-4" id="accordionExample">
+        <div className="accordion-item my_accordion">
+          <h2 className="accordion-header my_accordion_hd">
+            <button
+              className="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOff"
+            >
+              Typ Narzędzia
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            className="accordion-collapse collapse show"
+            data-bs-parent="#accordionExample"
+          >
+            <div className="accordion-body my_accordion_bt">
+              <div className="form-check my-2 my-radio-tools">
+                <input
+                  type="radio"
+                  name="typeTools"
+                  id="toolhss"
+                  defaultChecked
+                  onChange={(e) => {
+                    setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
+                  }}
+                ></input>
+                <label htmlFor="toolhss">HSS</label>
+                <input
+                  type="radio"
+                  name="typeTools"
+                  id="toolcarbide"
+                  onChange={(e) => {
+                    setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
+                  }}
+                ></input>
+                <label htmlFor="toolcarbide">Węglikowy</label>
+                <input
+                  type="radio"
+                  name="typeTools"
+                  id="toolfolding"
+                  onChange={(e) => {
+                    setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
+                  }}
+                ></input>
+                <label htmlFor="toolfolding">Płytkowe</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <h4>Typ Narzędzia</h4>
       <div className="form-check my-4 my-radio-tools">
         <input
@@ -260,25 +331,42 @@ function FooterPage() {
         {/* info catalog */}
         <h4>Dane katalogowe</h4>
         <div>
-          Vc = <span>{infoOfTool.outputData.vcMin}</span>-
+          Vc = <span>{infoOfTool.outputData.vcMin}</span> -{" "}
           <span>{infoOfTool.outputData.vcMax}</span> m/min
         </div>
         <div>
           f = <span>{infoOfTool.outputData.fk}</span> mm/ob
         </div>
+        {typeSelectTool === "toolfolding" && infoOfTool.pageMilling ? (
+          <div>
+            <div>
+              fz = <span className="text-danger">{f_Min}</span> -{" "}
+              <span className="text-warning">{f_Max}</span> mm/z
+            </div>
+            <div>
+              ap = <span className="text-warning">{ap_Min}</span> -{" "}
+              <span className="text-danger">{ap_Max}</span> mm
+            </div>
+            <div>
+              Twardość = <span>{hardness}</span> HB
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
         <div className="col-10 offset-1 mt-2 border"></div>
       </div>
       <div className="row resoult">
         <h4>Optymalne parametry</h4>
         <div className="col-6 col-md-4 offset-md-1 offset-3 mt-2">
           <p>
-            S = <span>{infoOfTool.outputData.sMin}</span>-
+            S = <span>{infoOfTool.outputData.sMin}</span> -{" "}
             <span>{infoOfTool.outputData.sMax}</span> ob/min
           </p>
         </div>
         <div className="col-6 col-md-4 offset-md-2 offset-3 mt-2">
           <p>
-            F = <span>{infoOfTool.outputData.fMin}</span>-
+            F = <span>{infoOfTool.outputData.fMin}</span> -{" "}
             <span>{infoOfTool.outputData.fMax}</span> mm/min
           </p>
         </div>

@@ -21,9 +21,6 @@ interface RootState {
     inputPlate: {
       f_Max: number
       f_Min: number
-      hardness: number
-      vc_Max: number
-      vc_Min: number
     }
     pageMilling: boolean
   }
@@ -47,11 +44,8 @@ function LogicCalcMill() {
   let typeTool: string = reduxInput.typeTool
   let typeMachining: string = reduxInput.typeMachining
   // data from redux for inputPlate
-  let f_Max: number = reduxInputPlate.f_Max
   let f_Min: number = reduxInputPlate.f_Min
-  let hardness: number = reduxInputPlate.hardness
-  let vc_Max: number = reduxInputPlate.vc_Max
-  let vc_Min: number = reduxInputPlate.vc_Min
+  let f_Max: number = reduxInputPlate.f_Max
 
   // show in "info catalog"
   // 'Vc' tools for "info catalog" from catalog
@@ -133,7 +127,7 @@ function LogicCalcMill() {
         }
         fetchMillData()
       } else if (typeTool === "toolfolding") {
-        millF = f_Min
+        millF = f_Max
         // 'f' for "info catalog"
         millRorate = Number((millF * z).toFixed(2))
         // Resoult

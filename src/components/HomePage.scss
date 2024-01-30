@@ -53,4 +53,15 @@
       margin-right: 5px;
     }
   }
+  .my_accordion {
+    background: rgb(60, 100, 56);
+    color: white;
+    border-color: rgb(60, 100, 56);
+    button {
+      color: white;
+      font-size: 0.7em;
+      font-weight: bold;
+      background: rgb(60, 100, 56);
+    }
+  }
 }
