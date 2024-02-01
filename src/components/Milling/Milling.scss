@@ -21,20 +21,35 @@
     }
   }
   form {
-    img {
-      width: 200px;
-      height: 250px;
-    }
+    margin-top: 10px;
   }
-  .imgPlate {
+  .img_plate {
+    margin-top: -30px;
     img {
       width: 80px;
       height: 80px;
       margin: 10px;
     }
-    .imgInfo {
-      width: 30px;
-      height: 30px;
+  }
+  .my_accordion {
+    background: rgb(60, 100, 56);
+    color: white;
+    border-color: rgb(60, 100, 56);
+    padding: 0;
+    button {
+      color: white;
+      font-size: 0.7em;
+      font-weight: bold;
+      background: rgb(60, 100, 56);
+      border-bottom: 2px solid silver;
     }
+  }
+  img {
+    width: 200px;
+    height: 250px;
+  }
+  .icon_plate {
+    width: 60px;
+    height: 60px;
   }
 }

@@ -4,8 +4,7 @@ import matAlum from "../assets/iso-n-al.jpg"
 import matStal from "../assets/iso-p-stal.jpg"
 import matStalN from "../assets/iso-m-nier.jpg"
 import matZel from "../assets/iso-k-zel.jpg"
-import upArrow from "../assets/up-arrow.png"
-import downArrow from "../assets/down-arrow.png"
+import ImgInfo from "../../src/assets/info.png"
 
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from "react-redux"
@@ -36,6 +35,7 @@ interface RootState {
       f_Min: number
       f_Max: number
       hardness: number
+      website: string
     }
     pageDrilling: boolean
     pageMilling: boolean
@@ -56,11 +56,30 @@ function FooterPage() {
   let f_Min = infoOfTool.inputPlate.f_Min
   let f_Max = infoOfTool.inputPlate.f_Max
   let hardness = infoOfTool.inputPlate.hardness
+  let website = infoOfTool.inputPlate.website
+
+  // name and material for show in accordion
+  const [nameTool, setNameTool] = useState("HSS")
+  const [iconMaterial, setIconMaterial] = useState(matStal)
 
   const [typeMaterial, setTypeMaterial] = useState("steel")
   const [typeSelectTool, setTypeSelectTool] = useState("toolhss")
 
   useEffect(() => {
+    // name tools for accordion
+    typeSelectTool === "toolhss"
+      ? setNameTool("HSS")
+      : typeSelectTool === "toolcarbide"
+      ? setNameTool("VHM")
+      : setNameTool("Płytkowe")
+    // icon material for accordion
+    typeMaterial === "steel"
+      ? setIconMaterial(matStal)
+      : typeMaterial === "aluminum"
+      ? setIconMaterial(matAlum)
+      : typeMaterial === "stainles"
+      ? setIconMaterial(matStalN)
+      : setIconMaterial(matZel)
     if (infoOfTool.pageDrilling) {
       // data base Vc for drilling
       const fetchDrillData = async () => {
@@ -184,8 +203,9 @@ function FooterPage() {
       ) : (
         NaN
       )}
-      <div className="accordion mx-4" id="accordionExample">
-        <div className="accordion-item my_accordion">
+      {/* _________________ Type tools________________ */}
+      <div className="accordion mx-4 row" id="accordionExample">
+        <div className="accordion-item col-12 my_accordion">
           <h2 className="accordion-header my_accordion_hd">
             <button
               className="accordion-button"
@@ -195,7 +215,7 @@ function FooterPage() {
               aria-expanded="true"
               aria-controls="collapseOff"
             >
-              Typ Narzędzia
+              Typ narzędzia - {nameTool}
             </button>
           </h2>
           <div
@@ -203,8 +223,8 @@ function FooterPage() {
             className="accordion-collapse collapse show"
             data-bs-parent="#accordionExample"
           >
-            <div className="accordion-body my_accordion_bt">
-              <div className="form-check my-2 my-radio-tools">
+            <div className="accordion-body row my_accordion_bt">
+              <div className="form-check my-2 ms-3 my-radio-tools">
                 <input
                   type="radio"
                   name="typeTools"
@@ -223,7 +243,7 @@ function FooterPage() {
                     setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
                   }}
                 ></input>
-                <label htmlFor="toolcarbide">Węglikowy</label>
+                <label htmlFor="toolcarbide">VHM</label>
                 <input
                   type="radio"
                   name="typeTools"
@@ -238,104 +258,132 @@ function FooterPage() {
           </div>
         </div>
       </div>
-
-      <h4>Typ Narzędzia</h4>
-      <div className="form-check my-4 my-radio-tools">
-        <input
-          type="radio"
-          name="typeTools"
-          id="toolhss"
-          defaultChecked
-          onChange={(e) => {
-            setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
-          }}
-        ></input>
-        <label htmlFor="toolhss">HSS</label>
-        <input
-          type="radio"
-          name="typeTools"
-          id="toolcarbide"
-          onChange={(e) => {
-            setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
-          }}
-        ></input>
-        <label htmlFor="toolcarbide">Węglikowy</label>
-        <input
-          type="radio"
-          name="typeTools"
-          id="toolfolding"
-          onChange={(e) => {
-            setTypeSelectTool((e.currentTarget as HTMLButtonElement).id)
-          }}
-        ></input>
-        <label htmlFor="toolfolding">Płytkowe</label>
+      {/* _________________ Type materials________________ */}
+      <div className="accordion mx-4 row" id="accordionExample">
+        <div className="accordion-item col-12 my_accordion">
+          <h2 className="accordion-header my_accordion_hd">
+            <button
+              className="accordion-button my_mat_bt"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="true"
+              aria-controls="collapseOff"
+            >
+              Typ materialu -{" "}
+              <img
+                src={iconMaterial}
+                className="icon_material"
+                alt="icon Materials"
+                title="material ISO"
+              ></img>
+            </button>
+          </h2>
+          <div
+            id="collapseTwo"
+            className="accordion-collapse collapse show"
+            data-bs-parent="#accordionExample"
+          >
+            <div className="accordion-body row my_accordion_bt">
+              <div className="row my-radio">
+                <div className="col-6 col-md-3">
+                  <input
+                    type="radio"
+                    name="typeMaterials"
+                    id="steel"
+                    defaultChecked
+                    onChange={(e) => {
+                      setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
+                    }}
+                  ></input>
+                  <label htmlFor="steel">
+                    <img
+                      src={matStal}
+                      alt="ISO Materials"
+                      title="Carbide steel"
+                    ></img>
+                  </label>
+                </div>
+                <div className="col-6 col-md-3">
+                  <input
+                    type="radio"
+                    name="typeMaterials"
+                    id="aluminum"
+                    onChange={(e) => {
+                      setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
+                    }}
+                  ></input>
+                  <label htmlFor="aluminum">
+                    <img
+                      src={matAlum}
+                      alt="ISO Materials"
+                      title="Aluminum"
+                    ></img>
+                  </label>
+                </div>
+                <div className="col-6 col-md-3">
+                  <input
+                    type="radio"
+                    name="typeMaterials"
+                    id="stainles"
+                    onChange={(e) => {
+                      setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
+                    }}
+                  ></input>
+                  <label htmlFor="stainles">
+                    <img
+                      src={matStalN}
+                      alt="ISO Materials"
+                      title="Stainles"
+                    ></img>
+                  </label>
+                </div>
+                <div className="col-6 col-md-3">
+                  <input
+                    type="radio"
+                    name="typeMaterials"
+                    id="iron"
+                    onChange={(e) => {
+                      setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
+                    }}
+                  ></input>
+                  <label htmlFor="iron">
+                    <img
+                      src={matZel}
+                      alt="ISO Materials"
+                      title="Cast iron"
+                    ></img>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <h4>Typ materialu</h4>
-      <div className="row my-radio">
-        <div className="col-6 col-md-3">
-          <input
-            type="radio"
-            name="typeMaterials"
-            id="steel"
-            defaultChecked
-            onChange={(e) => {
-              setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
-            }}
-          ></input>
-          <label htmlFor="steel">
-            <img src={matStal} alt="ISO Materials" title="Carbide steel"></img>
-          </label>
-        </div>
-        <div className="col-6 col-md-3">
-          <input
-            type="radio"
-            name="typeMaterials"
-            id="aluminum"
-            onChange={(e) => {
-              setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
-            }}
-          ></input>
-          <label htmlFor="aluminum">
-            <img src={matAlum} alt="ISO Materials" title="Aluminum"></img>
-          </label>
-        </div>
-        <div className="col-6 col-md-3">
-          <input
-            type="radio"
-            name="typeMaterials"
-            id="stainles"
-            onChange={(e) => {
-              setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
-            }}
-          ></input>
-          <label htmlFor="stainles">
-            <img src={matStalN} alt="ISO Materials" title="Stainles"></img>
-          </label>
-        </div>
-        <div className="col-6 col-md-3">
-          <input
-            type="radio"
-            name="typeMaterials"
-            id="iron"
-            onChange={(e) => {
-              setTypeMaterial((e.currentTarget as HTMLButtonElement).id)
-            }}
-          ></input>
-          <label htmlFor="iron">
-            <img src={matZel} alt="ISO Materials" title="Cast iron"></img>
-          </label>
-        </div>
-      </div>
-      <div className="row info-choosed">
-        <div className="col-10 offset-1 mb-2 border"></div>
-        {/* info catalog */}
-        <h4>Dane katalogowe</h4>
+      {/* _______________ info catalog _______________ */}
+      <div className="row mt-1 info-choosed">
+        {typeSelectTool === "toolfolding" ? (
+          <h4 className="web_info">
+            Dane katalogowe
+            <a href={website}>
+              <img
+                src={ImgInfo}
+                className="imgInfo"
+                alt="info icon"
+                title="info icon"
+              ></img>
+            </a>
+          </h4>
+        ) : (
+          <h4>Dane katalogowe</h4>
+        )}
         <div>
           Vc = <span>{infoOfTool.outputData.vcMin}</span> -{" "}
           <span>{infoOfTool.outputData.vcMax}</span> m/min
         </div>
         <div>
-          f = <span>{infoOfTool.outputData.fk}</span> mm/ob
+          f = <span className="text-warning">{infoOfTool.outputData.fk}</span>{" "}
+          mm/ob
         </div>
         {typeSelectTool === "toolfolding" && infoOfTool.pageMilling ? (
           <div>
@@ -356,15 +404,16 @@ function FooterPage() {
         )}
         <div className="col-10 offset-1 mt-2 border"></div>
       </div>
-      <div className="row resoult">
+      {/* ____________ Parameters ____________ */}
+      <div className="row mt-1 resoult">
         <h4>Optymalne parametry</h4>
-        <div className="col-6 col-md-4 offset-md-1 offset-3 mt-2">
+        <div className="col-6 col-md-4 offset-md-1 offset-3 mt-1">
           <p>
             S = <span>{infoOfTool.outputData.sMin}</span> -{" "}
             <span>{infoOfTool.outputData.sMax}</span> ob/min
           </p>
         </div>
-        <div className="col-6 col-md-4 offset-md-2 offset-3 mt-2">
+        <div className="col-6 col-md-4 offset-md-2 offset-3 mt-1">
           <p>
             F = <span>{infoOfTool.outputData.fMin}</span> -{" "}
             <span>{infoOfTool.outputData.fMax}</span> mm/min

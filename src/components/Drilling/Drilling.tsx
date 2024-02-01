@@ -42,7 +42,7 @@ function Drilling() {
       </header>
       <div className="col-8 offset-2 col-md-4 offset-md-4">
         <h4>Średnica wiertła</h4>
-        <div className="input-group mb-3">
+        <div className="input-group mb-3 mt-4">
           <span className="input-group-text">d = </span>
           <input
             type="number"
