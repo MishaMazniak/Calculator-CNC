@@ -39,8 +39,14 @@ export const dataSlice = createSlice({
       fMin: 0,
       fMax: 0
     },
+    inputDataBoring: {
+      R_plate: 0,
+      ap_Min: 0,
+      ap_Max: 0
+    },
     pageDrilling: false,
-    pageMilling: false
+    pageMilling: false,
+    pageBoring: false
   },
   reducers: {
     switchPage: (state, action) => {
@@ -49,9 +55,18 @@ export const dataSlice = createSlice({
     calculationPage: (state, action) => {
       state.pageDrilling = action.payload.pageDrilling
       state.pageMilling = action.payload.pageMilling
+      state.pageBoring = action.payload.pageBoring
     },
     addD: (state, action) => {
       state.inputData.d = action.payload.diameter
+    },
+    addInputDataBoring: (state, action) => {
+      state.inputDataBoring.R_plate = action.payload.R_plate
+      state.inputData.typeMachining = action.payload.typeMachining
+      state.inputPlate.f_Max = action.payload.f_Max
+      state.inputPlate.f_Min = action.payload.f_Min
+      state.inputDataBoring.ap_Max = action.payload.ap_Max
+      state.inputDataBoring.ap_Min = action.payload.ap_Min
     },
     addMatAndTool: (state, action) => {
       state.inputData.typeMaterial = action.payload.typeMaterial
@@ -103,6 +118,7 @@ export const {
   addOutputData,
   calculationPage,
   addD,
-  addMatAndTool
+  addMatAndTool,
+  addInputDataBoring
 } = dataSlice.actions
 export default dataSlice.reducer

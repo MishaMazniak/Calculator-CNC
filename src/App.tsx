@@ -3,8 +3,9 @@ import {useSelector} from "react-redux"
 
 import HomePage from "./components/HomePage"
 import Drilling from "./components/Drilling/Drilling"
-import FooterPage from "./components/FooterPage"
 import Milling from "./components/Milling/Milling"
+import Boring from "./components/Boring/Boring"
+import FooterPage from "./components/FooterPage"
 
 interface RootState {
   calculatorData: {
@@ -27,6 +28,11 @@ function App() {
       ) : propsRedux.choosOperation === "milling" ? (
         <>
           <Milling></Milling>
+          <FooterPage></FooterPage>
+        </>
+      ) : propsRedux.choosOperation === "boring" ? (
+        <>
+          <Boring></Boring>
           <FooterPage></FooterPage>
         </>
       ) : (

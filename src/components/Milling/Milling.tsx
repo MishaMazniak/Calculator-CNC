@@ -29,6 +29,7 @@ interface RootState {
       typeTool: string
       typeMaterial: string
       z: number
+      vcMin: number
     }
     inputPlate: {
       hardness: number
@@ -38,6 +39,10 @@ interface RootState {
       f_Max: number
       plate: string
     }
+    outputData: {
+      fk: number
+    }
+    cleanMyInput: boolean
   }
 }
 
@@ -65,6 +70,7 @@ function HssRoughing() {
   const [yourFz, setYourFz] = useState(0)
   const [yourS, setYourS] = useState(0)
   const [yourF, setYourF] = useState(0)
+  let mathVc: number
   // img plyte for show in accordion
   const [iconTool, setIconTool] = useState(imgADKT)
 
@@ -85,7 +91,8 @@ function HssRoughing() {
     dispatch(
       calculationPage({
         pageDrilling: false,
-        pageMilling: false
+        pageMilling: false,
+        pageBoring: false
       })
     )
   }
@@ -130,6 +137,11 @@ function HssRoughing() {
 
     // choose a coefficient "Ae" "Ap" for different types of cuttings
     if (d !== 0) {
+      // calculations according to your parameters Vc
+      if (yourVc !== 0) {
+        mathVc = Math.floor((yourVc * 1000) / (d * 3.14))
+        setYourS(mathVc)
+      }
       if (typeTool !== "toolfolding") {
         if (typeMachining === "rough" && typeTool === "toolhss") {
           // dependense about "ae" for rough cutting
@@ -146,6 +158,9 @@ function HssRoughing() {
             : ap > 2 * d
             ? (coefAp = 0.25)
             : (coefAp = 1)
+          // calculations according to your parameters Fz
+          if (yourFz !== 0)
+            setYourF(Math.floor(mathVc * yourFz * coefAe * coefAp))
         } else if (
           (typeMachining === "finishing" && typeTool === "toolhss") ||
           typeTool === "toolcarbide"
@@ -164,6 +179,9 @@ function HssRoughing() {
             : ap > 2 * d
             ? (coefAp = 0.25)
             : (coefAp = 1)
+          // calculations according to your parameters Fz
+          if (yourFz !== 0)
+            setYourF(Math.floor(mathVc * yourFz * coefAe * coefAp))
         }
         dispatch(
           addInputData({
@@ -179,10 +197,8 @@ function HssRoughing() {
           })
         )
       } else if (typeTool === "toolfolding") {
-        // calculations according to your parameters Vc and Fz
-        yourVc !== 0 ? setYourS(Math.floor((yourVc * 1000) / (d * 3.14))) : NaN
-        yourFz !== 0 ? setYourF(Math.floor(yourS * z * yourFz)) : NaN
-
+        // calculations according to your parameters Fz
+        if (yourFz !== 0) setYourF(Math.floor(mathVc * z * yourFz))
         dispatch(
           addInputData({
             d: d,
@@ -237,7 +253,7 @@ function HssRoughing() {
         {/* _________ input form for tool HSS and VHM _________ */}
         {infoOfTool.inputData.typeTool === "toolhss" ||
         infoOfTool.inputData.typeTool === "toolcarbide" ? (
-          <div className="col-8 offset-2">
+          <div className="col-8 offset-2 col-md-4 offset-md-4">
             <div className="input-group mb-3">
               <span className="input-group-text">d = </span>
               <input
@@ -256,6 +272,27 @@ function HssRoughing() {
                 onChange={(e) => setZ(parseFloat(e.target.value))}
               ></input>
               <span className="input-group-text"> szt</span>
+            </div>
+            <div className="input-group mb-3">
+              {/* _________ input form for your data "Vc" and "fz" _________ */}
+              <span className="input-group-text">vc = </span>
+              <input
+                type="number"
+                className="form-control"
+                placeholder={d !== 0 ? String(infoOfTool.inputData.vcMin) : "0"}
+                onChange={(e) => setYourVc(parseFloat(e.target.value))}
+              ></input>
+              <span className="input-group-text"> m/min</span>
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">f = </span>
+              <input
+                type="number"
+                className="form-control"
+                placeholder={String(infoOfTool.outputData.fk)}
+                onChange={(e) => setYourFz(parseFloat(e.target.value))}
+              ></input>
+              <span className="input-group-text"> mm/ob</span>
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">ap = </span>
@@ -324,25 +361,25 @@ function HssRoughing() {
               ></input>
               <span className="input-group-text"> mm/z</span>
             </div>
-            {/* _________ show resoult to your parameters "Vc" and "fz" _________ */}
-            {yourVc !== 0 ? (
-              <div>
-                <span>Resultat:</span>
-                <div>
-                  <span>S = {yourS} ob/min</span>
-                </div>
-                <div>
-                  <span>F = {yourF} mm/min</span>
-                </div>
-              </div>
-            ) : (
-              ""
-            )}
           </div>
         ) : (
           NaN
         )}
       </form>
+      {/* _________ show resoult to your parameters "Vc" and "fz" _________ */}
+      {yourVc !== 0 || yourFz !== 0 ? (
+        <div>
+          <span>Obliczanie twoich danych:</span>
+          <div>
+            <span>S = {yourS} ob/min</span>
+          </div>
+          <div>
+            <span>F = {yourF} mm/min</span>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
       <div className="col-12">
         <div className="accordion mx-4 row" id="accordionExample">
           <div className="accordion-item col-12 my_accordion">

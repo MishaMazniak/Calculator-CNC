@@ -1,7 +1,7 @@
 import "./HomePage.scss"
 import drillHss from "../assets/Drilling.png"
 import millingCutter from "../assets/Milling.png"
-import boringBarRough from "../assets/wytaczadlo_zgrubne2.png"
+import boringBarRough from "../assets/Tytle-wytaczdlo.png"
 import {useDispatch} from "react-redux"
 import {switchPage, calculationPage} from "../redux/calculatorData"
 
@@ -18,14 +18,24 @@ function HomePage() {
       dispatch(
         calculationPage({
           pageDrilling: true,
-          pageMilling: false
+          pageMilling: false,
+          pageBoring: false
         })
       )
     } else if (id === "milling") {
       dispatch(
         calculationPage({
           pageDrilling: false,
-          pageMilling: true
+          pageMilling: true,
+          pageBoring: false
+        })
+      )
+    } else if (id === "boring") {
+      dispatch(
+        calculationPage({
+          pageDrilling: false,
+          pageMilling: false,
+          pageBoring: true
         })
       )
     }
@@ -33,12 +43,12 @@ function HomePage() {
 
   return (
     <div className="home-page">
-      <div className="lang">
+      <div className="d-none lang">
         <span>Ua</span>
         <span>Pl</span>
         <span>En</span>
       </div>
-      <h1>Calculator CNC</h1>
+      <h1 className="pt-3">Calculator CNC</h1>
       <div className="row operation">
         <div className="col-12 col-md-4 offset-md-2">
           <h2>Wiercenie</h2>

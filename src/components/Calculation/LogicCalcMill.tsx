@@ -44,7 +44,6 @@ function LogicCalcMill() {
   let typeTool: string = reduxInput.typeTool
   let typeMachining: string = reduxInput.typeMachining
   // data from redux for inputPlate
-  let f_Min: number = reduxInputPlate.f_Min
   let f_Max: number = reduxInputPlate.f_Max
 
   // show in "info catalog"
@@ -69,7 +68,6 @@ function LogicCalcMill() {
   let servingMax: number
 
   useEffect(() => {
-    console.log(infoRedux)
     if (infoRedux.pageMilling && d !== 0) {
       // condition for tool hss and carbide
       if (typeTool === "toolhss" || typeTool === "toolcarbide") {

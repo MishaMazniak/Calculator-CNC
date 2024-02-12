@@ -1,0 +1,19 @@
+.my_accordion {
+  background: rgb(60, 100, 56);
+  color: white;
+  border-color: rgb(60, 100, 56);
+  padding: 0;
+  .my_accordion_hd {
+    button {
+      color: white;
+      font-size: 0.7em;
+      font-weight: bold;
+      background: rgb(60, 100, 56);
+      border-bottom: 2px solid silver;
+    }
+  }
+  .my_boring {
+    height: 350px;
+    width: 250px;
+  }
+}
