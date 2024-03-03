@@ -159,7 +159,8 @@ function Drilling() {
         const fetchMillData = async () => {
           try {
             const response = await fetch(
-              `http://localhost:5000/boring_rough/${material}/${tableD}/${tableCoef}`
+              `https://calculator-cnc.pl/boring_rough/${material}/${tableD}/${tableCoef}`
+              // `http://localhost:5000/boring_rough/${material}/${tableD}/${tableCoef}`
             )
             const data = await response.json()
             // setInputVc(data[0].vc_Min)
@@ -180,7 +181,8 @@ function Drilling() {
         const fetchMillData = async () => {
           try {
             const response = await fetch(
-              `http://localhost:5000/boring_finishing/${material}/${tableCoef}`
+              `https://calculator-cnc.pl/boring_finishing/${material}/${tableCoef}`
+              // `http://localhost:5000/boring_finishing/${material}/${tableCoef}`
             )
             const data = await response.json()
             dbVc_Min = data[0].vc_Min

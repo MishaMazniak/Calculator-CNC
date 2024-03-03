@@ -57,7 +57,8 @@ function LogicCalcDrill() {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/f-drill-${typeTool}/${diametr}/${typeMaterial}`
+            `https://calculator-cnc.pl/f_drill_${typeTool}/${diametr}/${typeMaterial}`
+            // `http://localhost:5000/f_drill_${typeTool}/${diametr}/${typeMaterial}`
           )
           const data = await response.json()
           typeMaterial === "steel"

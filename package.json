@@ -1,6 +1,8 @@
 {
   "name": "calculator-cnc",
   "private": true,
+  "homepage": "https://calculator-cnc.pl/",
+  "proxy": "https://h29.seohost.pl/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

@@ -93,7 +93,8 @@ function FooterPage() {
       const fetchDrillData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/vc-drilling/${typeMaterial}/${typeSelectTool}`
+            `https://calculator-cnc.pl/vc_drilling/${typeMaterial}/${typeSelectTool}`
+            // `http://localhost:5000/vc_drilling/${typeMaterial}/${typeSelectTool}`
           )
           const data = await response.json()
           saveFetch(data)
@@ -110,7 +111,8 @@ function FooterPage() {
         const fetchMillData = async () => {
           try {
             const response = await fetch(
-              `http://localhost:5000/vc-milling-rough/${typeMaterial}/${typeSelectTool}`
+              `https://calculator-cnc.pl/vc_milling_rough/${typeMaterial}/${typeSelectTool}`
+              // `http://localhost:5000/vc_milling_rough/${typeMaterial}/${typeSelectTool}`
             )
             const data = await response.json()
             saveFetch(data)
@@ -127,7 +129,8 @@ function FooterPage() {
         const fetchMillData = async () => {
           try {
             const response = await fetch(
-              `http://localhost:5000/vc-milling/${typeMaterial}/${typeSelectTool}`
+              `https://calculator-cnc.pl/vc_milling/${typeMaterial}/${typeSelectTool}`
+              // `http://localhost:5000/vc_milling/${typeMaterial}/${typeSelectTool}`
             )
             const data = await response.json()
             saveFetch(data)
@@ -141,9 +144,11 @@ function FooterPage() {
         const fetchMillData = async () => {
           try {
             const response = await fetch(
-              `http://localhost:5000/milling-plates/${typeMaterial}/${typePlate}`
+              `https://calculator-cnc.pl/milling_plates/${typeMaterial}/${typePlate}`
+              // `http://localhost:5000/milling_plates/${typeMaterial}/${typePlate}`
             )
             const data = await response.json()
+            console.log(data)
             dispatch(
               addMatAndTool({
                 typeMaterial: typeMaterial,

@@ -85,7 +85,8 @@ function LogicCalcMill() {
         const fetchMillData = async () => {
           try {
             const response = await fetch(
-              `http://localhost:5000/f-mill-${typeTool}-${typeProces}/${diametr}/${typeMaterial}`
+              `https://calculator-cnc.pl/f_mill_${typeTool}${typeProces}/${diametr}/${typeMaterial}`
+              // `http://localhost:5000/f_mill_${typeTool}${typeProces}/${diametr}/${typeMaterial}`
             )
             const data = await response.json()
             typeMaterial === "steel"
