@@ -46,7 +46,8 @@ export const dataSlice = createSlice({
     },
     pageDrilling: false,
     pageMilling: false,
-    pageBoring: false
+    pageBoring: false,
+    myLang: "Pl"
   },
   reducers: {
     switchPage: (state, action) => {
@@ -107,6 +108,9 @@ export const dataSlice = createSlice({
 
       state.outputData.fMin = action.payload.fMin
       state.outputData.fMax = action.payload.fMax
+    },
+    addLang: (state, action) => {
+      state.myLang = action.payload.myLang
     }
   }
 })
@@ -119,6 +123,7 @@ export const {
   calculationPage,
   addD,
   addMatAndTool,
-  addInputDataBoring
+  addInputDataBoring,
+  addLang
 } = dataSlice.actions
 export default dataSlice.reducer

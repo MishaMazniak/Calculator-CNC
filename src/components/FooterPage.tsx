@@ -45,6 +45,7 @@ interface RootState {
     pageMilling: boolean
     pageBoring: boolean
     cleanMyInput: boolean
+    myLang: string
   }
 }
 
@@ -56,8 +57,8 @@ function FooterPage() {
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
 
   let typeMachining: string = infoOfTool.inputData.typeMachining
-
   let typePlate: string = infoOfTool.inputData.plate
+  let lang: string = infoOfTool.myLang
 
   let ap_Min = infoOfTool.inputPlate.ap_Min
   let ap_Max = infoOfTool.inputPlate.ap_Max
@@ -65,6 +66,15 @@ function FooterPage() {
   let f_Max = infoOfTool.inputPlate.f_Max
   let hardness = infoOfTool.inputPlate.hardness
   let website = infoOfTool.inputPlate.website
+
+  // text for differents language
+  const [nameTypeTool, setNameTypeTool] = useState("")
+  const [nameTypeMaterial, setNameTypeMaterial] = useState("")
+  const [nameDataCatalo, setNameDataCatalo] = useState("")
+  const [nameDataCalcul, setNameDataCalcul] = useState("")
+  const [nameRev, setNameRev] = useState("")
+  const [namePlate, setNamePlate] = useState("")
+  const [nameHardness, setNameHardness] = useState("")
 
   // name and material for show in accordion
   const [nameTool, setNameTool] = useState("HSS")
@@ -186,7 +196,32 @@ function FooterPage() {
         })
       )
     }
-  }, [typeMaterial, typeSelectTool, typeMachining, dispatch, infoOfTool])
+    if (lang === "Pl") {
+      setNameTypeTool("Typ narzędzia")
+      setNameTypeMaterial("Typ materiału")
+      setNameDataCatalo("Dane katalogowe")
+      setNameDataCalcul("Obliczanie według katalogu")
+      setNameRev("ob")
+      setNamePlate("Płytkowe")
+      setNameHardness("Twardość")
+    } else if (lang === "Ua") {
+      setNameTypeTool("Тип інструменту")
+      setNameTypeMaterial("Тип матеріалу")
+      setNameDataCatalo("Дані з каталогу")
+      setNameDataCalcul("Обрахунок згідно з каталогом")
+      setNameRev("об")
+      setNamePlate("Твердосплав")
+      setNameHardness("Твердість")
+    } else if (lang === "En") {
+      setNameTypeTool("Type tool")
+      setNameTypeMaterial("Type material")
+      setNameDataCatalo("Data from the catalog")
+      setNameDataCalcul("Calculation")
+      setNameRev("rev")
+      setNamePlate("Plate")
+      setNameHardness("Hardness")
+    }
+  }, [typeMaterial, typeSelectTool, typeMachining, dispatch, infoOfTool, lang])
 
   // get value from data base
   function saveFetch(data: any) {
@@ -232,7 +267,7 @@ function FooterPage() {
                 aria-expanded="true"
                 aria-controls="collapseOff"
               >
-                Typ narzędzia - {nameTool}
+                {nameTypeTool} - {nameTool}
               </button>
             </h2>
             <div
@@ -275,7 +310,7 @@ function FooterPage() {
                       )
                     }}
                   ></input>
-                  <label htmlFor="toolfolding">Płytkowe</label>
+                  <label htmlFor="toolfolding">{namePlate}</label>
                 </div>
               </div>
             </div>
@@ -296,7 +331,7 @@ function FooterPage() {
               aria-expanded="true"
               aria-controls="collapseOff"
             >
-              Typ materiału -{" "}
+              {nameTypeMaterial} -{" "}
               <img
                 src={iconMaterial}
                 className="icon_material"
@@ -360,7 +395,7 @@ function FooterPage() {
                     <img
                       src={matStalN}
                       alt="ISO Materials"
-                      title="Stainles"
+                      title="Stainless"
                     ></img>
                   </label>
                 </div>
@@ -391,7 +426,7 @@ function FooterPage() {
         {/* select img */}
         {typeSelectTool === "toolfolding" && infoOfTool.pageMilling ? (
           <h4 className="web_info">
-            Dane katalogowe
+            {nameDataCatalo}
             <a href={website}>
               <img
                 src={ImgInfo}
@@ -402,14 +437,14 @@ function FooterPage() {
             </a>
           </h4>
         ) : (
-          <h4>Dane katalogowe</h4>
+          <h4>{nameDataCatalo}</h4>
         )}
         <div>
           Vc = <span>{infoOfTool.outputData.vcMin}</span> -{" "}
           <span>{infoOfTool.outputData.vcMax}</span> m/min
         </div>
         <div>
-          f = <span>{infoOfTool.outputData.fk}</span> mm/ob
+          f = <span>{infoOfTool.outputData.fk}</span> mm/{nameRev}
         </div>
         {/* show data from catalog for folding tools */}
         {typeSelectTool === "toolfolding" && infoOfTool.pageMilling ? (
@@ -423,7 +458,7 @@ function FooterPage() {
               <span className="text-danger">{ap_Max}</span> mm
             </div>
             <div>
-              Twardość = <span className="text-info">{hardness}</span> HB
+              {nameHardness} = <span className="text-info">{hardness}</span> HB
             </div>
           </div>
         ) : (
@@ -433,14 +468,14 @@ function FooterPage() {
         {infoOfTool.pageBoring ? (
           <div>
             <div>
-              fk = <span>{f_Min}</span> - <span>{f_Max}</span> mm/ob
+              fk = <span>{f_Min}</span> - <span>{f_Max}</span> mm/{nameRev}
             </div>
             <div>
               ap = <span>{infoOfTool.inputDataBoring.ap_Min}</span> -{" "}
               <span>{infoOfTool.inputDataBoring.ap_Max}</span> mm
             </div>
             <div>
-              R_płytki = <span>{infoOfTool.inputDataBoring.R_plate}</span> mm
+              R = <span>{infoOfTool.inputDataBoring.R_plate}</span> mm
             </div>
           </div>
         ) : (
@@ -450,11 +485,11 @@ function FooterPage() {
       </div>
       {/* ____________ Parameters ____________ */}
       <div className="row mt-1 resoult">
-        <h4>Obliczanie według katalogu</h4>
+        <h4>{nameDataCalcul}</h4>
         <div className="col-6 col-md-4 offset-md-1 offset-3 mt-1">
           <p>
             S = <span>{infoOfTool.outputData.sMin}</span> -{" "}
-            <span>{infoOfTool.outputData.sMax}</span> ob/min
+            <span>{infoOfTool.outputData.sMax}</span> {nameRev}/min
           </p>
         </div>
         <div className="col-6 col-md-4 offset-md-2 offset-3 mt-1">

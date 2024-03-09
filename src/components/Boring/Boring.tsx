@@ -24,6 +24,7 @@ interface RootState {
     outputData: {
       fk: number
     }
+    myLang: string
   }
 }
 
@@ -32,8 +33,16 @@ function Drilling() {
 
   // data from redux
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
+  let lang: string = infoOfTool.myLang
 
   let material = infoOfTool.inputData.typeMaterial
+
+  // text for differents language
+  const [nameTitle, setNameTitle] = useState("")
+  const [nameYoyrCalc, setNameYoyrCalc] = useState("")
+  const [nameRev, setNameRev] = useState("")
+  const [nameRough, setNameRough] = useState("")
+  const [nameFin, setNameFin] = useState("")
 
   // Data machining type
   const [typeMachining, setTypeMachining] = useState("rough")
@@ -200,7 +209,35 @@ function Drilling() {
         fetchMillData()
       }
     }
-  }, [diameter, d_mandrel, l_mandrel, material, yourVc, yourFz, typeMachining])
+    if (lang === "Pl") {
+      setNameTitle("Rozwiercanie")
+      setNameYoyrCalc("Obliczanie dla twoich Vc i f")
+      setNameRev("ob")
+      setNameRough("Wstępne")
+      setNameFin("Wykańczające")
+    } else if (lang === "Ua") {
+      setNameTitle("Точення")
+      setNameYoyrCalc("Обрахунок для твоїх Vc i f")
+      setNameRev("об")
+      setNameRough("Згрубне")
+      setNameFin("Чистове")
+    } else if (lang === "En") {
+      setNameTitle("Boring")
+      setNameYoyrCalc("Calculation for your Vc and f")
+      setNameRev("rev")
+      setNameRough("Rough")
+      setNameFin("Finishing")
+    }
+  }, [
+    diameter,
+    d_mandrel,
+    l_mandrel,
+    material,
+    yourVc,
+    yourFz,
+    typeMachining,
+    lang
+  ])
 
   return (
     <div className="drilling">
@@ -208,7 +245,7 @@ function Drilling() {
         <div className="col-2 col-md-2 arrow mx-2" onClick={mainPage}>
           <img src={ImgArrow}></img>
         </div>
-        <h1 className="col-8 col-md-3 offset-md-2">Rozwiercanie</h1>
+        <h1 className="col-8 col-md-3 offset-md-2">{nameTitle}</h1>
       </header>
       <div className="form-check my-4">
         {/* _________ Select typ machining "rough" or "finishing" for tools HSS _________*/}
@@ -223,7 +260,7 @@ function Drilling() {
           }}
         ></input>
         <label className="me-5" htmlFor="rough">
-          Wstępne
+          {nameRough}
         </label>
         <input
           className="mx-2"
@@ -234,7 +271,7 @@ function Drilling() {
             setTypeMachining((e.currentTarget as HTMLButtonElement).id)
           }}
         ></input>
-        <label htmlFor="finishing">Wykańczające</label>
+        <label htmlFor="finishing">{nameFin}</label>
       </div>
       <div className="col-8 offset-2 col-md-4 offset-md-4">
         <div className="input-group mb-3 mt-3">
@@ -283,14 +320,16 @@ function Drilling() {
             placeholder={String(infoOfTool.outputData.fk)}
             onChange={(e) => setYourFz(parseFloat(e.target.value))}
           ></input>
-          <span className="input-group-text"> mm/ob</span>
+          <span className="input-group-text"> mm/{nameRev}</span>
         </div>
         {/* _________ show resoult to your parameters "Vc" and "fz" _________ */}
         {yourVc !== 0 || yourFz !== 0 ? (
           <div>
-            <span>Obliczanie twoich danych:</span>
+            <span>{nameYoyrCalc}:</span>
             <div>
-              <span>S = {yourS} ob/min</span>
+              <span>
+                S = {yourS} {nameRev}/min
+              </span>
             </div>
             <div>
               <span>F = {yourF} mm/min</span>

@@ -16,6 +16,7 @@ interface RootState {
     outputData: {
       fk: number
     }
+    myLang: string
   }
 }
 
@@ -24,6 +25,7 @@ function Drilling() {
 
   // data from redux
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
+  let lang: string = infoOfTool.myLang
 
   // Data parameters
   const [diameter, setDiameter] = useState(0)
@@ -33,6 +35,11 @@ function Drilling() {
   const [yourS, setYourS] = useState(0)
   const [yourF, setYourF] = useState(0)
   let mathVc: number
+
+  // text for differents language
+  const [nameTitle, setNameTitle] = useState("")
+  const [nameYoyrCalc, setNameYoyrCalc] = useState("")
+  const [nameRev, setNameRev] = useState("")
 
   // Return to the main page
   function mainPage() {
@@ -61,7 +68,20 @@ function Drilling() {
         diameter: diameter
       })
     )
-  }, [diameter, yourVc, yourFz])
+    if (lang === "Pl") {
+      setNameTitle("Wiercenie")
+      setNameYoyrCalc("Obliczanie dla twoich Vc i f")
+      setNameRev("ob")
+    } else if (lang === "Ua") {
+      setNameTitle("Сверління")
+      setNameYoyrCalc("Обрахунок для твоїх Vc i f")
+      setNameRev("об")
+    } else if (lang === "En") {
+      setNameTitle("Drilling")
+      setNameYoyrCalc("Calculation for your Vc and f")
+      setNameRev("rev")
+    }
+  }, [diameter, yourVc, yourFz, lang])
 
   return (
     <div className="drilling">
@@ -69,7 +89,7 @@ function Drilling() {
         <div className="col-2 col-md-2 arrow mx-2" onClick={mainPage}>
           <img src={ImgArrow}></img>
         </div>
-        <h1 className="col-8 col-md-3 offset-md-2">Wiercenie</h1>
+        <h1 className="col-8 col-md-3 offset-md-2">{nameTitle}</h1>
       </header>
       <div className="col-8 offset-2 col-md-4 offset-md-4">
         <div className="input-group mb-3 mt-4">
@@ -102,14 +122,16 @@ function Drilling() {
             placeholder={String(infoOfTool.outputData.fk)}
             onChange={(e) => setYourFz(parseFloat(e.target.value))}
           ></input>
-          <span className="input-group-text"> mm/ob</span>
+          <span className="input-group-text"> mm/{nameRev}</span>
         </div>
         {/* _________ show resoult to your parameters "Vc" and "fz" _________ */}
         {yourVc !== 0 || yourFz !== 0 ? (
           <div>
-            <span>Obliczanie twoich danych:</span>
+            <span>{nameYoyrCalc}:</span>
             <div>
-              <span>S = {yourS} ob/min</span>
+              <span>
+                S = {yourS} {nameRev}/min
+              </span>
             </div>
             <div>
               <span>F = {yourF} mm/min</span>

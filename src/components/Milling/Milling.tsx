@@ -43,6 +43,7 @@ interface RootState {
       fk: number
     }
     cleanMyInput: boolean
+    myLang: string
   }
 }
 
@@ -52,11 +53,20 @@ function HssRoughing() {
   let infoOfTool = useSelector((state: RootState) => state.calculatorData)
 
   let typeTool: string = infoOfTool.inputData.typeTool
+  let lang: string = infoOfTool.myLang
 
   let name: string = infoOfTool.inputPlate.name
   let type: string = infoOfTool.inputPlate.type
   let vc_Min: number = infoOfTool.inputPlate.vc_Min
   let f_Max: number = infoOfTool.inputPlate.f_Max
+
+  // text for differents language
+  const [nameTitle, setNameTitle] = useState("")
+  const [nameYoyrCalc, setNameYoyrCalc] = useState("")
+  const [nameRev, setNameRev] = useState("")
+  const [nameRough, setNameRough] = useState("")
+  const [nameFin, setNameFin] = useState("")
+  const [namePieces, setNamePieces] = useState("")
 
   // Data parameters
   const [d, setD] = useState(0)
@@ -209,15 +219,36 @@ function HssRoughing() {
         )
       }
     }
-  }, [d, z, ap, ae, plate, yourVc, yourFz, typeMachining, typeTool])
-
+    if (lang === "Pl") {
+      setNameTitle("Frezowanie")
+      setNameYoyrCalc("Obliczanie dla twoich Vc i f")
+      setNameRev("ob")
+      setNameRough("Zgrubne")
+      setNameFin("Wykańczające")
+      setNamePieces("szt")
+    } else if (lang === "Ua") {
+      setNameTitle("Фрезовання")
+      setNameYoyrCalc("Обрахунок для твоїх Vc i f")
+      setNameRev("об")
+      setNameRough("Згрубне")
+      setNameFin("Чистове")
+      setNamePieces("шт")
+    } else if (lang === "En") {
+      setNameTitle("Milling")
+      setNameYoyrCalc("Calculation for your Vc and f")
+      setNameRev("rev")
+      setNameRough("Rough")
+      setNameFin("Finishing")
+      setNamePieces("pieces")
+    }
+  }, [d, z, ap, ae, plate, yourVc, yourFz, typeMachining, typeTool, lang])
   return (
     <div className="milling">
       <header className="row ms-md-5 my-nav">
         <div className="col-2 col-md-2 me-1 arrow" onClick={mainPage}>
           <img src={ImgArrow}></img>
         </div>
-        <h1 className="col-8 col-md-5 offset-md-1">Frezowanie</h1>
+        <h1 className="col-8 col-md-5 offset-md-1">{nameTitle}</h1>
       </header>
       {infoOfTool.inputData.typeTool === "toolhss" ? (
         <div className="form-check my-4">
@@ -233,7 +264,7 @@ function HssRoughing() {
             }}
           ></input>
           <label className="me-5" htmlFor="rough">
-            Zgrubne
+            {nameRough}
           </label>
           <input
             className="mx-2"
@@ -244,7 +275,7 @@ function HssRoughing() {
               setTypeMachining((e.currentTarget as HTMLButtonElement).id)
             }}
           ></input>
-          <label htmlFor="finishing">Wykańczające</label>
+          <label htmlFor="finishing">{nameFin}</label>
         </div>
       ) : (
         ""
@@ -271,7 +302,7 @@ function HssRoughing() {
                 value={z}
                 onChange={(e) => setZ(parseFloat(e.target.value))}
               ></input>
-              <span className="input-group-text"> szt</span>
+              <span className="input-group-text"> {namePieces}</span>
             </div>
             <div className="input-group mb-3">
               {/* _________ input form for your data "Vc" and "fz" _________ */}
@@ -292,7 +323,7 @@ function HssRoughing() {
                 placeholder={String(infoOfTool.outputData.fk)}
                 onChange={(e) => setYourFz(parseFloat(e.target.value))}
               ></input>
-              <span className="input-group-text"> mm/ob</span>
+              <span className="input-group-text"> mm/{nameRev}</span>
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">ap = </span>
@@ -369,9 +400,11 @@ function HssRoughing() {
       {/* _________ show resoult to your parameters "Vc" and "fz" _________ */}
       {yourVc !== 0 || yourFz !== 0 ? (
         <div>
-          <span>Obliczanie twoich danych:</span>
+          <span>{nameYoyrCalc}:</span>
           <div>
-            <span>S = {yourS} ob/min</span>
+            <span>
+              S = {yourS} {nameRev}/min
+            </span>
           </div>
           <div>
             <span>F = {yourF} mm/min</span>
