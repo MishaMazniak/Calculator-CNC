@@ -57,6 +57,9 @@ function Drilling() {
     )
   }
   useEffect(() => {
+    diameter === 0 || isNaN(diameter) ? setDiameter(1) : NaN
+    yourVc === 0 || isNaN(yourVc) ? setYourVc(infoOfTool.inputData.vcMin) : NaN
+    yourFz === 0 || isNaN(yourFz) ? setYourFz(infoOfTool.outputData.fk) : NaN
     // calculations according to your parameters Vc
     if (yourVc !== 0) {
       mathVc = Math.floor((yourVc * 1000) / (diameter * 3.14))
@@ -91,13 +94,14 @@ function Drilling() {
         </div>
         <h1 className="col-8 col-md-3 offset-md-2">{nameTitle}</h1>
       </header>
-      <div className="col-8 offset-2 col-md-4 offset-md-4">
+      <div className="col-8 offset-2 col-md-6 offset-md-3">
         <div className="input-group mb-3 mt-4">
           <span className="input-group-text">d = </span>
           <input
             type="number"
             className="form-control"
-            onChange={(e) => setDiameter(parseFloat(e.target.value))}
+            placeholder={String(diameter)}
+            onChange={(e) => setDiameter(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> mm</span>
         </div>
@@ -110,7 +114,7 @@ function Drilling() {
             placeholder={
               diameter !== 0 ? String(infoOfTool.inputData.vcMin) : "0"
             }
-            onChange={(e) => setYourVc(parseFloat(e.target.value))}
+            onChange={(e) => setYourVc(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> m/min</span>
         </div>
@@ -120,7 +124,7 @@ function Drilling() {
             type="number"
             className="form-control"
             placeholder={String(infoOfTool.outputData.fk)}
-            onChange={(e) => setYourFz(parseFloat(e.target.value))}
+            onChange={(e) => setYourFz(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> mm/{nameRev}</span>
         </div>

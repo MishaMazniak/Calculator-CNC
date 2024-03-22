@@ -1,0 +1,55 @@
+.milling {
+  color: white;
+  background: rgb(60, 100, 56);
+  padding-bottom: 25px;
+  .my-nav {
+    padding: 10px;
+    h1 {
+      border: 2px solid silver;
+    }
+    img {
+      width: 40px;
+      height: 40px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .my-radio {
+    label {
+      margin-right: 20px;
+    }
+  }
+  form {
+    margin-top: 10px;
+  }
+  .img_plate {
+    margin-top: -30px;
+    img {
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+    }
+  }
+  .my_accordion {
+    background: rgb(60, 100, 56);
+    color: white;
+    border-color: rgb(60, 100, 56);
+    padding: 0;
+    button {
+      color: white;
+      font-size: 0.7em;
+      font-weight: bold;
+      background: rgb(60, 100, 56);
+      border-bottom: 2px solid silver;
+    }
+  }
+  img {
+    width: 200px;
+    height: 250px;
+  }
+  .icon_plate {
+    width: 60px;
+    height: 60px;
+  }
+}

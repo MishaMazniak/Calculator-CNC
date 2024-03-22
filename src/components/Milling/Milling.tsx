@@ -67,6 +67,7 @@ function HssRoughing() {
   const [nameRough, setNameRough] = useState("")
   const [nameFin, setNameFin] = useState("")
   const [namePieces, setNamePieces] = useState("")
+  const [nameTypePlate, setNameTypePlate] = useState("")
 
   // Data parameters
   const [d, setD] = useState(0)
@@ -108,24 +109,31 @@ function HssRoughing() {
   }
   // show z, ap, ae after input d
   function changeD(d: number) {
-    let valAe: number
-    setD(d)
-    // show ap, ae
-    if (typeTool === "toolhss" || typeTool === "toolcarbide") {
-      setAp(d)
-      valAe = Number((d * 0.1).toFixed(2))
-      setAe(valAe)
+    if (d >= 0) {
+      let valAe: number
+      setD(d)
+      // show ap, ae
+      if (typeTool === "toolhss" || typeTool === "toolcarbide") {
+        setAp(d)
+        valAe = Number((d * 0.1).toFixed(2))
+        setAe(valAe)
+        // show the number of Z (dependence of z on the diameter of the tools)
+        if (d <= 20) setZ(4)
+        else if (d > 20 && d <= 40) setZ(6)
+        else if (d > 40) setZ(8)
+      }
+    } else if (isNaN(d)) {
+      setD(1)
     }
-    // show Z
-    if (typeTool === "toolhss" || typeTool === "toolcarbide") {
-      if (d <= 20) setZ(4)
-      else if (d > 20 && d <= 40) setZ(6)
-      else if (d > 40) setZ(8)
-    } else if (typeTool === "toolfolding") {
-      setZ(2)
-    } else setZ(0)
   }
   useEffect(() => {
+    // chack data from input on NaN
+    isNaN(z) ? setZ(2) : NaN
+    isNaN(yourVc) ? setYourVc(infoOfTool.inputData.vcMin) : NaN
+    isNaN(yourFz) ? setYourFz(infoOfTool.outputData.fk) : NaN
+    isNaN(ap) ? setAp(d) : NaN
+    isNaN(ae) ? setAe(Number((d * 0.1).toFixed(2))) : NaN
+    console.log(yourFz)
     // icon plate for accordion
     if (typeTool === "toolfolding") {
       plate === "adkt"
@@ -154,7 +162,7 @@ function HssRoughing() {
       }
       if (typeTool !== "toolfolding") {
         if (typeMachining === "rough" && typeTool === "toolhss") {
-          // dependense about "ae" for rough cutting
+          // dependence about "ae" for rough cutting
           ae <= 0.25 * d
             ? (coefAe = 1)
             : ae > 0.25 * d && ae <= 0.5 * d
@@ -162,7 +170,7 @@ function HssRoughing() {
             : ae === d
             ? (coefAe = 0.5)
             : (coefAe = 0.5)
-          // dependense about "ap"
+          // dependence about "ap"
           ap > d && ap < 2 * d
             ? (coefAp = 0.5)
             : ap > 2 * d
@@ -175,7 +183,7 @@ function HssRoughing() {
           (typeMachining === "finishing" && typeTool === "toolhss") ||
           typeTool === "toolcarbide"
         ) {
-          // dependense about "ae" for finishing cutting and work tool carbide
+          // dependence about "ae" for finishing cutting and work tool carbide
           ae <= 0.1 * d
             ? (coefAe = 1)
             : ae > 0.1 * d && ae <= 0.5 * d
@@ -183,7 +191,7 @@ function HssRoughing() {
             : ae === d
             ? (coefAe = 0.4)
             : (coefAe = 0.4)
-          // dependense about "ap"
+          // dependence about "ap"
           ap > d && ap < 2 * d
             ? (coefAp = 0.5)
             : ap > 2 * d
@@ -226,6 +234,7 @@ function HssRoughing() {
       setNameRough("Zgrubne")
       setNameFin("Wykańczające")
       setNamePieces("szt")
+      setNameTypePlate("Typ płytki")
     } else if (lang === "Ua") {
       setNameTitle("Фрезовання")
       setNameYoyrCalc("Обрахунок для твоїх Vc i f")
@@ -233,6 +242,7 @@ function HssRoughing() {
       setNameRough("Згрубне")
       setNameFin("Чистове")
       setNamePieces("шт")
+      setNameTypePlate("Форма плитки")
     } else if (lang === "En") {
       setNameTitle("Milling")
       setNameYoyrCalc("Calculation for your Vc and f")
@@ -240,6 +250,7 @@ function HssRoughing() {
       setNameRough("Rough")
       setNameFin("Finishing")
       setNamePieces("pieces")
+      setNameTypePlate("Typ plate")
     }
   }, [d, z, ap, ae, plate, yourVc, yourFz, typeMachining, typeTool, lang])
   return (
@@ -284,13 +295,14 @@ function HssRoughing() {
         {/* _________ input form for tool HSS and VHM _________ */}
         {infoOfTool.inputData.typeTool === "toolhss" ||
         infoOfTool.inputData.typeTool === "toolcarbide" ? (
-          <div className="col-8 offset-2 col-md-4 offset-md-4">
+          <div className="col-8 offset-2 col-md-6 offset-md-3">
             <div className="input-group mb-3">
               <span className="input-group-text">d = </span>
               <input
                 type="number"
                 className="form-control"
-                onChange={(e) => changeD(parseFloat(e.target.value))}
+                placeholder={String(d)}
+                onChange={(e) => changeD(Math.abs(parseFloat(e.target.value)))}
               ></input>
               <span className="input-group-text"> mm</span>
             </div>
@@ -299,7 +311,7 @@ function HssRoughing() {
               <input
                 type="number"
                 className="form-control"
-                value={z}
+                placeholder={String(z)}
                 onChange={(e) => setZ(parseFloat(e.target.value))}
               ></input>
               <span className="input-group-text"> {namePieces}</span>
@@ -311,7 +323,9 @@ function HssRoughing() {
                 type="number"
                 className="form-control"
                 placeholder={d !== 0 ? String(infoOfTool.inputData.vcMin) : "0"}
-                onChange={(e) => setYourVc(parseFloat(e.target.value))}
+                onChange={(e) =>
+                  setYourVc(Math.abs(parseFloat(e.target.value)))
+                }
               ></input>
               <span className="input-group-text"> m/min</span>
             </div>
@@ -321,7 +335,9 @@ function HssRoughing() {
                 type="number"
                 className="form-control"
                 placeholder={String(infoOfTool.outputData.fk)}
-                onChange={(e) => setYourFz(parseFloat(e.target.value))}
+                onChange={(e) =>
+                  setYourFz(Math.abs(parseFloat(e.target.value)))
+                }
               ></input>
               <span className="input-group-text"> mm/{nameRev}</span>
             </div>
@@ -332,7 +348,7 @@ function HssRoughing() {
                 className="form-control"
                 placeholder={String(ap)}
                 id="type-ap"
-                onChange={(e) => setAp(parseFloat(e.target.value))}
+                onChange={(e) => setAp(Math.abs(parseFloat(e.target.value)))}
               ></input>
               <span className="input-group-text"> mm</span>
             </div>
@@ -343,21 +359,21 @@ function HssRoughing() {
                 className="form-control"
                 placeholder={String(ae)}
                 id="type-ae"
-                onChange={(e) => setAe(parseFloat(e.target.value))}
+                onChange={(e) => setAe(Math.abs(parseFloat(e.target.value)))}
               ></input>
               <span className="input-group-text"> mm</span>
             </div>
             <div className="row mb-4"></div>
           </div>
         ) : infoOfTool.inputData.typeTool === "toolfolding" ? (
-          <div className="col-8 offset-2 col-md-8 offset-md-2">
+          <div className="col-8 offset-2 col-md-6 offset-md-3">
             {/* _________ input form for tool folding _________ */}
             <div className="input-group mb-3">
               <span className="input-group-text">d = </span>
               <input
                 type="number"
                 className="form-control"
-                onChange={(e) => changeD(parseFloat(e.target.value))}
+                onChange={(e) => changeD(Math.abs(parseFloat(e.target.value)))}
               ></input>
               <span className="input-group-text"> mm</span>
             </div>
@@ -367,7 +383,7 @@ function HssRoughing() {
                 type="number"
                 className="form-control"
                 value={z}
-                onChange={(e) => setZ(parseFloat(e.target.value))}
+                onChange={(e) => setZ(Math.abs(parseFloat(e.target.value)))}
               ></input>
               <span className="input-group-text"> szt</span>
             </div>
@@ -378,7 +394,9 @@ function HssRoughing() {
                 type="number"
                 className="form-control"
                 placeholder={String(vc_Min)}
-                onChange={(e) => setYourVc(parseFloat(e.target.value))}
+                onChange={(e) =>
+                  setYourVc(Math.abs(parseFloat(e.target.value)))
+                }
               ></input>
               <span className="input-group-text"> m/min</span>
             </div>
@@ -388,7 +406,9 @@ function HssRoughing() {
                 type="number"
                 className="form-control"
                 placeholder={String(f_Max)}
-                onChange={(e) => setYourFz(parseFloat(e.target.value))}
+                onChange={(e) =>
+                  setYourFz(Math.abs(parseFloat(e.target.value)))
+                }
               ></input>
               <span className="input-group-text"> mm/z</span>
             </div>
@@ -422,10 +442,13 @@ function HssRoughing() {
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseThree"
-                aria-expanded="true"
+                aria-expanded="false"
                 aria-controls="collapseOff"
               >
-                IMG -{" "}
+                {infoOfTool.inputData.typeTool === "toolhss" ||
+                infoOfTool.inputData.typeTool === "toolcarbide"
+                  ? "IMG - Ap/Ae"
+                  : nameTypePlate}
                 <img
                   src={iconTool}
                   className="icon_plate mb-1 ms-2"
@@ -436,7 +459,7 @@ function HssRoughing() {
             </h2>
             <div
               id="collapseThree"
-              className="accordion-collapse collapse show mt-4"
+              className="accordion-collapse collapse mt-4"
               data-bs-parent="#accordionExample"
             >
               {/* _________ Select img for tools HSS and VHM _________*/}

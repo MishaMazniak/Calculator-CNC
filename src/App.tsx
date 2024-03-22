@@ -5,6 +5,7 @@ import HomePage from "./components/HomePage"
 import Drilling from "./components/Drilling/Drilling"
 import Milling from "./components/Milling/Milling"
 import Boring from "./components/Boring/Boring"
+import Tolerance from "./components/Tolerance/Tolerance"
 import FooterPage from "./components/FooterPage"
 
 interface RootState {
@@ -34,6 +35,10 @@ function App() {
         <>
           <Boring></Boring>
           <FooterPage></FooterPage>
+        </>
+      ) : propsRedux.choosOperation === "tolerance" ? (
+        <>
+          <Tolerance></Tolerance>
         </>
       ) : (
         NaN

@@ -75,6 +75,7 @@ function FooterPage() {
   const [nameRev, setNameRev] = useState("")
   const [namePlate, setNamePlate] = useState("")
   const [nameHardness, setNameHardness] = useState("")
+  const [nameImgPlate, setNameImgPlate] = useState("")
 
   // name and material for show in accordion
   const [nameTool, setNameTool] = useState("HSS")
@@ -158,7 +159,6 @@ function FooterPage() {
               // `http://localhost:5000/milling_plates/${typeMaterial}/${typePlate}`
             )
             const data = await response.json()
-            console.log(data)
             dispatch(
               addMatAndTool({
                 typeMaterial: typeMaterial,
@@ -204,6 +204,9 @@ function FooterPage() {
       setNameRev("ob")
       setNamePlate("Płytkowe")
       setNameHardness("Twardość")
+      if (nameTool === "Płytkowe") {
+        setNameImgPlate("Płytkowe")
+      }
     } else if (lang === "Ua") {
       setNameTypeTool("Тип інструменту")
       setNameTypeMaterial("Тип матеріалу")
@@ -212,6 +215,9 @@ function FooterPage() {
       setNameRev("об")
       setNamePlate("Твердосплав")
       setNameHardness("Твердість")
+      if (nameTool === "Płytkowe") {
+        setNameImgPlate("Твердосплав")
+      }
     } else if (lang === "En") {
       setNameTypeTool("Type tool")
       setNameTypeMaterial("Type material")
@@ -220,6 +226,9 @@ function FooterPage() {
       setNameRev("rev")
       setNamePlate("Plate")
       setNameHardness("Hardness")
+      if (nameTool === "Płytkowe") {
+        setNameImgPlate("Plate")
+      }
     }
   }, [typeMaterial, typeSelectTool, typeMachining, dispatch, infoOfTool, lang])
 
@@ -267,7 +276,8 @@ function FooterPage() {
                 aria-expanded="true"
                 aria-controls="collapseOff"
               >
-                {nameTypeTool} - {nameTool}
+                {nameTypeTool} -{" "}
+                {nameTool === "Płytkowe" ? nameImgPlate : nameTool}
               </button>
             </h2>
             <div

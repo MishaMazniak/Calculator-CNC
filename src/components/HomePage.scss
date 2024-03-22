@@ -1,5 +1,8 @@
 .home-page {
   background: rgb(60, 100, 56);
+  // background-image: url("../assets/background.png");
+  // background-repeat: no-repeat;
+  // background-size: cover;
   padding-bottom: 20px;
   color: white;
   .lang {
@@ -16,6 +19,7 @@
     }
   }
   .operation {
+    height: 100%;
     & > div {
       margin-top: 25px;
     }
@@ -26,11 +30,12 @@
       width: 200px;
       height: 200px;
     }
-    .drilling,
-    .milling,
-    .boring {
+    .border_icon {
       border: 2px solid rgb(224, 5, 5);
-      padding: 1px;
+      padding: 0px;
+    }
+    .my-hover:hover {
+      transform: scale(1.1);
     }
   }
 }

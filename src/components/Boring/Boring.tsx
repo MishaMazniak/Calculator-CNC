@@ -27,6 +27,15 @@ interface RootState {
     myLang: string
   }
 }
+interface DataItem {
+  vc_Min: number
+  vc_Max: number
+  f_Min: number
+  f_Max: number
+  ap_Min: number
+  ap_Max: number
+  R_plate: number
+}
 
 function Drilling() {
   const dispatch = useDispatch()
@@ -94,14 +103,15 @@ function Drilling() {
       })
     )
   }
-  function calcData() {
-    // dbVc_Min = data.vc_Min
-    // dbVc_Max = data[0].vc_Max
-    // dbF_Min = data[0].f_Min
-    // dbF_Max = data[0].f_Max
-    // dbAp_Min = data[0].ap_Min
-    // dbAp_Max = data[0].ap_Max
-    // dbR_plate = data[0].R_plate
+  // get data for proces Boring
+  function calcData(data: DataItem[]) {
+    dbVc_Min = data[0].vc_Min
+    dbVc_Max = data[0].vc_Max
+    dbF_Min = data[0].f_Min
+    dbF_Max = data[0].f_Max
+    dbAp_Min = data[0].ap_Min
+    dbAp_Max = data[0].ap_Max
+    dbR_plate = data[0].R_plate
     // Resoult
     setInputVc(dbVc_Min)
     // 'S' for "info catalog"
@@ -172,15 +182,7 @@ function Drilling() {
               // `http://localhost:5000/boring_rough/${material}/${tableD}/${tableCoef}`
             )
             const data = await response.json()
-            // setInputVc(data[0].vc_Min)
-            dbVc_Min = data[0].vc_Min
-            dbVc_Max = data[0].vc_Max
-            dbF_Min = data[0].f_Min
-            dbF_Max = data[0].f_Max
-            dbAp_Min = data[0].ap_Min
-            dbAp_Max = data[0].ap_Max
-            dbR_plate = data[0].R_plate
-            calcData()
+            calcData(data)
           } catch (error) {
             console.error("Error", error)
           }
@@ -194,14 +196,7 @@ function Drilling() {
               // `http://localhost:5000/boring_finishing/${material}/${tableCoef}`
             )
             const data = await response.json()
-            dbVc_Min = data[0].vc_Min
-            dbVc_Max = data[0].vc_Max
-            dbF_Min = data[0].f_Min
-            dbF_Max = data[0].f_Max
-            dbAp_Min = data[0].ap_Min
-            dbAp_Max = data[0].ap_Max
-            dbR_plate = data[0].R_plate
-            calcData()
+            calcData(data)
           } catch (error) {
             console.error("Error", error)
           }
@@ -273,13 +268,14 @@ function Drilling() {
         ></input>
         <label htmlFor="finishing">{nameFin}</label>
       </div>
-      <div className="col-8 offset-2 col-md-4 offset-md-4">
+      <div className="col-8 offset-2 col-md-6 offset-md-3">
         <div className="input-group mb-3 mt-3">
           <span className="input-group-text">D = </span>
           <input
             type="number"
             className="form-control"
-            onChange={(e) => setDiameter(parseFloat(e.target.value))}
+            placeholder={isNaN(diameter) ? "0" : "0"}
+            onChange={(e) => setDiameter(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> mm</span>
         </div>
@@ -288,7 +284,8 @@ function Drilling() {
           <input
             type="number"
             className="form-control"
-            onChange={(e) => setD_mandrel(parseFloat(e.target.value))}
+            placeholder={isNaN(d_mandrel) ? "0" : "0"}
+            onChange={(e) => setD_mandrel(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> mm</span>
         </div>
@@ -297,7 +294,8 @@ function Drilling() {
           <input
             type="number"
             className="form-control"
-            onChange={(e) => setL_mandrel(parseFloat(e.target.value))}
+            placeholder={isNaN(l_mandrel) ? "0" : "0"}
+            onChange={(e) => setL_mandrel(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> mm</span>
         </div>
@@ -308,7 +306,7 @@ function Drilling() {
             type="number"
             className="form-control"
             placeholder={diameter !== 0 ? String(inputVc) : "0"}
-            onChange={(e) => setYourVc(parseFloat(e.target.value))}
+            onChange={(e) => setYourVc(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> m/min</span>
         </div>
@@ -318,12 +316,12 @@ function Drilling() {
             type="number"
             className="form-control"
             placeholder={String(infoOfTool.outputData.fk)}
-            onChange={(e) => setYourFz(parseFloat(e.target.value))}
+            onChange={(e) => setYourFz(Math.abs(parseFloat(e.target.value)))}
           ></input>
           <span className="input-group-text"> mm/{nameRev}</span>
         </div>
         {/* _________ show resoult to your parameters "Vc" and "fz" _________ */}
-        {yourVc !== 0 || yourFz !== 0 ? (
+        {diameter !== 0 && (yourVc !== 0 || yourFz !== 0) ? (
           <div>
             <span>{nameYoyrCalc}:</span>
             <div>
