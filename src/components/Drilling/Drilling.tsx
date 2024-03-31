@@ -92,7 +92,7 @@ function Drilling() {
         <div className="col-2 col-md-2 arrow mx-2" onClick={mainPage}>
           <img src={ImgArrow}></img>
         </div>
-        <h1 className="col-8 col-md-3 offset-md-2">{nameTitle}</h1>
+        <h1 className="col-8 col-md-3 offset-md-2 pb-2">{nameTitle}</h1>
       </header>
       <div className="col-8 offset-2 col-md-6 offset-md-3">
         <div className="input-group mb-3 mt-4">

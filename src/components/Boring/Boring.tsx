@@ -240,7 +240,7 @@ function Drilling() {
         <div className="col-2 col-md-2 arrow mx-2" onClick={mainPage}>
           <img src={ImgArrow}></img>
         </div>
-        <h1 className="col-8 col-md-3 offset-md-2">{nameTitle}</h1>
+        <h1 className="col-8 col-md-3 offset-md-2 pb-2">{nameTitle}</h1>
       </header>
       <div className="form-check my-4">
         {/* _________ Select typ machining "rough" or "finishing" for tools HSS _________*/}

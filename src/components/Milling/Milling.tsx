@@ -259,7 +259,7 @@ function HssRoughing() {
         <div className="col-2 col-md-2 me-1 arrow" onClick={mainPage}>
           <img src={ImgArrow}></img>
         </div>
-        <h1 className="col-8 col-md-5 offset-md-1">{nameTitle}</h1>
+        <h1 className="col-8 col-md-5 offset-md-1 pb-2">{nameTitle}</h1>
       </header>
       {infoOfTool.inputData.typeTool === "toolhss" ? (
         <div className="form-check my-4">
