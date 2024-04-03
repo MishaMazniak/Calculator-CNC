@@ -58,8 +58,8 @@ function Drilling() {
   }
   useEffect(() => {
     diameter === 0 || isNaN(diameter) ? setDiameter(1) : NaN
-    yourVc === 0 || isNaN(yourVc) ? setYourVc(infoOfTool.inputData.vcMin) : NaN
-    yourFz === 0 || isNaN(yourFz) ? setYourFz(infoOfTool.outputData.fk) : NaN
+    yourVc !== 0 || isNaN(yourVc) ? setYourVc(infoOfTool.inputData.vcMin) : NaN
+    yourFz !== 0 || isNaN(yourFz) ? setYourFz(infoOfTool.outputData.fk) : NaN
     // calculations according to your parameters Vc
     if (yourVc !== 0) {
       mathVc = Math.floor((yourVc * 1000) / (diameter * 3.14))

@@ -1,5 +1,6 @@
 import "./Tolerance.scss"
 import ImgArrow from "../../assets/left-arrow.png"
+import ImgDop from "../../assets/dopuski-i-posadki5.jpg"
 import {useDispatch} from "react-redux"
 import {switchPage, calculationPage} from "../../redux/calculatorData"
 import {useState, useEffect} from "react"
@@ -260,7 +261,7 @@ function Tolerance() {
       setNameClass("Тип:")
       setNameTolerance("Допуск:")
     } else if (lang === "En") {
-      setNameTitle("Tolerance calculator")
+      setNameTitle("Calculatort tolerance")
       setNameSelDeteil("Hole/Shaft:")
       setNameHole("Hole")
       setNameShaft("Shaft")
@@ -346,7 +347,7 @@ function Tolerance() {
   ])
 
   return (
-    <div className="milling">
+    <div className="tolerance">
       <header className="row ms-md-5 pt-3 mb-3 my-nav">
         <div className="col-2 col-md-2 arrow mx-2" onClick={mainPage}>
           <img src={ImgArrow}></img>
@@ -453,6 +454,9 @@ function Tolerance() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="mt-3 col-12">
+        <img className="img_toler" src={ImgDop}></img>
       </div>
     </div>
   )
