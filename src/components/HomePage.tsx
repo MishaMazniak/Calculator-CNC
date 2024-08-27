@@ -3,6 +3,7 @@ import drillHss from "../assets/Drilling.png"
 import millingCutter from "../assets/Milling.png"
 import boringBarRough from "../assets/Tytle-wytaczdlo.png"
 import tables from "../assets/Tables.png"
+import screwsIMG from "../assets/screw.jpeg"
 import {useDispatch, useSelector} from "react-redux"
 import {switchPage, calculationPage, addLang} from "../redux/calculatorData"
 import {useState, useEffect} from "react"
@@ -24,6 +25,7 @@ function HomePage() {
   const [nameMilling, setNameMilling] = useState("")
   const [nameBoring, setNameBoring] = useState("")
   const [nameTabels, setNameTabels] = useState("")
+  const [nameScrews, setNameScrews] = useState("")
 
   function mainPage(id: string) {
     dispatch(
@@ -71,18 +73,21 @@ function HomePage() {
       setNameMilling("Frezowanie")
       setNameBoring("Wytaczanie")
       setNameTabels("Tolerancji")
+      setNameScrews("Otwór pod gwint")
     } else if (lang === "Ua") {
       setMainName("Калькулятор ЧПУ")
       setNameDrilling("Сверління")
       setNameMilling("Фрезовання")
       setNameBoring("Точення")
       setNameTabels("Допуски")
+      setNameScrews("Отвір під різьбу")
     } else if (lang === "En") {
       setMainName("Calculator CNC")
       setNameDrilling("Drilling")
       setNameMilling("Milling")
       setNameBoring("Boring")
       setNameTabels("Tolerance")
+      setNameScrews("Tapping hole")
     }
   }, [lang])
 
@@ -149,6 +154,21 @@ function HomePage() {
           >
             <img src={tables}></img>
           </button>
+        </div>
+        <div className="mb-5 my-hover">
+          <h2>{nameScrews}</h2>
+          <button
+            className="border_icon"
+            id="screws"
+            onClick={(e) => mainPage((e.currentTarget as HTMLButtonElement).id)}
+          >
+            <img src={screwsIMG}></img>
+          </button>
+        </div>
+        <div className="">
+          <a className="text-light" href="mailto:Mishamaznyak@gmail.com">
+            Mishamaznyak@<span>gmail.com</span>
+          </a>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import Milling from "./components/Milling/Milling"
 import Boring from "./components/Boring/Boring"
 import Tolerance from "./components/Tolerance/Tolerance"
 import FooterPage from "./components/FooterPage"
+import Screws from "./components/Screws/Screws"
 
 interface RootState {
   calculatorData: {
@@ -39,6 +40,10 @@ function App() {
       ) : propsRedux.choosOperation === "tolerance" ? (
         <>
           <Tolerance></Tolerance>
+        </>
+      ) : propsRedux.choosOperation === "screws" ? (
+        <>
+          <Screws></Screws>
         </>
       ) : (
         NaN

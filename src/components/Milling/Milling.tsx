@@ -133,7 +133,6 @@ function HssRoughing() {
     isNaN(yourFz) ? setYourFz(infoOfTool.outputData.fk) : NaN
     isNaN(ap) ? setAp(d) : NaN
     isNaN(ae) ? setAe(Number((d * 0.1).toFixed(2))) : NaN
-    console.log(yourFz)
     // icon plate for accordion
     if (typeTool === "toolfolding") {
       plate === "adkt"
@@ -382,7 +381,7 @@ function HssRoughing() {
               <input
                 type="number"
                 className="form-control"
-                value={z}
+                placeholder={String(z)}
                 onChange={(e) => setZ(Math.abs(parseFloat(e.target.value)))}
               ></input>
               <span className="input-group-text"> szt</span>
